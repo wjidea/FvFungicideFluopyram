@@ -1,3 +1,7 @@
 .Rproj.user
 .Rhistory
 .RData
+*.html
+*.ps
+*.eps
+*.png

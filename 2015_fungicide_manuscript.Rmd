@@ -1,0 +1,9 @@
+---
+title: "2015 fungicide manuscript"
+author: "Jie Wang"
+date: "December 15, 2015"
+output: html_document
+---
+
+
+
