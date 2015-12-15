@@ -1,2 +1,2 @@
 # FvFungicideFluopyram
-Fungicide sensitivity test for F. virguliforme
+Fungicide sensitivity test for _F. virguliforme_
