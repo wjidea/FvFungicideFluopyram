@@ -4,3 +4,112 @@ author: "Jie Wang"
 date: "December 15, 2015"
 output: html_document
 ---
+
+## 1, Background
+_Fusarium virguliforme_ is a soilborne soybean pathogen infected and colonized
+in soybean roots. Disease management strategies are still lacking to deal with
+this devastating diseases. Seed treatment with fungicide seem to be promising in
+numerous disease management, however it was nevel tried on _F. virguliforme_ in
+the past. In this study, the SDHI fungicide, fluopyram, was used to evaluate
+the response of _F. virguliforme_ response to fluopyram fungicide treatment.
+
+## 2, Objectives
+- baseline sensitivity of _F. virguliforme_ response to fluopyram
+- different methods (similarity and differences)
+- Fitness of the data with the model
+- differences among different demography data
+
+## 3, Dependencies and data descriptions
+Load required dependencies.  
+How data were collected, organized, and stored in the directory.
+
+### 1), load dependencies
+```{r load dependencies, echo = FALSE,  message = FALSE}
+options(digits = 3,scipen = 999, max.print = 500)
+library("drc")
+library("ggplot2")
+library("dplyr")
+
+```
+### 2), import data
+```{r import data, echo = FALSE,  message = FALSE}
+dataPlatePath <- file.path("/Users/wjidea/GoogleDrive/Graduate_Study/0_Research",
+                           "_projects/5_Fungicide_project/2014_Bayer_fluopyram/",
+                           "FvFungicideFluopyram/Data")
+
+# filesPlateNames <- dir(dataPlatePath, pattern = "^fungal_set[0-9]*$")
+fileList <- list.files(path = dataPlatePath, full.names = TRUE, 
+                       pattern = "^fungal_set[0-9]*$")
+listPlate <- lapply(fileList, read.table, header = TRUE, sep="\t")
+listPlate <- na.omit(listPlate)
+
+# rbind all the data lists
+fullPlateData <- plyr::ldply(listPlate, data.frame)
+
+# strip space in the strain name, | is a boolean or
+trim <- function (x) gsub("^\\s+|\\s+$", "", x)
+fullPlateData$Strain <- trim(fullPlateData$Strain)
+
+# change other wrong names
+fullPlateData$Strain[fullPlateData$Strain == "VB1"]      <- "VB-1"
+fullPlateData$Strain[fullPlateData$Strain == "Mont1_GH"] <- "Mont1"
+
+# change to factors for different sets of run
+fullPlateData$Set <- as.factor(fullPlateData$Set)
+
+# set strain and set name combination
+fullPlateData$setStrain <- paste(fullPlateData$Set,fullPlateData$Strain, sep="@")
+fullPlateData$setStrain <- factor(fullPlateData$setStrain)
+
+# calculate EC50 for each set_strain and test
+setStrainList <- levels(fullPlateData$setStrain)
+
+# calculate EC50 for each of the strainSet
+if (file.exists("EC50_diameter_diamR.txt")) file.remove("EC50_diameter_diamR.txt")
+
+write2File <- FALSE
+
+# create empty list with colNames
+EC50Raw <- data.frame(straiName = character(0), EC50 = numeric(0), 
+                      StdErr = numeric(0), Upper = numeric(), Lower = numeric())
+for (strainSet in setStrainList ){
+  # subset data by strain set
+  subData <- subset(fullPlateData, subset = fullPlateData$setStrain == strainSet)
+  
+  # back calculate the radius
+  subData$diameter2 <- with(subData, 2*sqrt(Area2/3.1415926))
+  subData$diameter1 <- with(subData, 2*sqrt(Area1/3.1415926))
+  # calculate mycelia growth rate per day in centermeters
+  subData$diameterR <- (subData$diameter2 - subData$diameter1) / 14
+  subData.m1 <- drm(diameterR ~ Conc, 
+                   format(setStrain, trim=TRUE),
+                   fct=LL.4(names=c("slope","Lower Limit","Upper Limit","EC50")),
+                   data=subData)
+  ED_table <- ED(subData.m1,c(50), interval="delta")
+  EC50Raw <- rbind(EC50Raw, ED_table)
+  
+  if (write2File){
+  write.table(format(ED_table,digits=3,trim=TRUE),"EC50_diameter_diamR.txt",
+               append = TRUE, sep = "\t",col.names = FALSE, eol = "\n",
+               quote = FALSE, row.names=TRUE)}
+  }
+colnames(EC50Raw) <- c( "EC50", "StdErr", "Upper", "Lower")
+
+# split the row setStrain name into two columns
+# strainCols <- do.call(rbind, strsplit(rownames(EC50Sum), "@"))
+strainSplitList <- stringr::str_split_fixed(rownames(EC50Sum), "@",2)
+strainSplitList <- cbind(strainSplitList, 
+                         stringr::str_split_fixed(strainSplitList[,2],":",2))
+strainSplitList <- strainSplitList[,c(1,3)]
+colnames(strainSplitList) <- c("Set","Strain")
+EC50Sum <- cbind(EC50Raw, strainSplitList)
+rownames(EC50Sum) <- paste(EC50Sum$Strain,EC50Sum$Set,sep = "_")
+
+```
+## 4, Results
+
+
+
+
+## 5, Notes and comments
+
