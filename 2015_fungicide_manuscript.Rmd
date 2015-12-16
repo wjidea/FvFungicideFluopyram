@@ -23,20 +23,26 @@ the response of _F. virguliforme_ response to fluopyram fungicide treatment.
 Load required dependencies.  
 How data were collected, organized, and stored in the directory.
 
-### 1), load dependencies
+### 1) load dependencies
 ```{r load dependencies, echo = FALSE,  message = FALSE}
 options(digits = 3,scipen = 999, max.print = 500)
 library("drc")
 library("ggplot2")
 library("dplyr")
+library("stringr")
+
+# functions
+
+# trim leading and trailling space, "|" is a boolean "OR"
+trim <- function (x) gsub("^\\s+|\\s+$", "", x) 
 
 ```
-### 2), import data
-```{r import data, echo = FALSE,  message = FALSE}
-dataPlatePath <- file.path("/Users/wjidea/GoogleDrive/Graduate_Study/0_Research",
-                           "_projects/5_Fungicide_project/2014_Bayer_fluopyram/",
-                           "FvFungicideFluopyram/Data")
 
+### 2) import data and manipulations
+```{r import data, echo = FALSE,  message = FALSE}
+dataPlatePath <- file.path("/Users/wjidea/GoogleDrive/Graduate_Study",
+                          "0_Research_projects/5_Fungicide_project",
+                          "2014_Bayer_fluopyram/FvFungicideFluopyram/Data")
 # filesPlateNames <- dir(dataPlatePath, pattern = "^fungal_set[0-9]*$")
 fileList <- list.files(path = dataPlatePath, full.names = TRUE, 
                        pattern = "^fungal_set[0-9]*$")
@@ -46,8 +52,7 @@ listPlate <- na.omit(listPlate)
 # rbind all the data lists
 fullPlateData <- plyr::ldply(listPlate, data.frame)
 
-# strip space in the strain name, | is a boolean or
-trim <- function (x) gsub("^\\s+|\\s+$", "", x)
+# strip space in the strain name
 fullPlateData$Strain <- trim(fullPlateData$Strain)
 
 # change other wrong names
@@ -61,20 +66,27 @@ fullPlateData$Set <- as.factor(fullPlateData$Set)
 fullPlateData$setStrain <- paste(fullPlateData$Set,fullPlateData$Strain, sep="@")
 fullPlateData$setStrain <- factor(fullPlateData$setStrain)
 
-# calculate EC50 for each set_strain and test
-setStrainList <- levels(fullPlateData$setStrain)
 
+```
+
+### 3) Calculate EC50 for poison plate assay
+```{r cal plate EC50, results = "hide", warning = FALSE, cache = TRUE}
 # calculate EC50 for each of the strainSet
-if (file.exists("EC50_diameter_diamR.txt")) file.remove("EC50_diameter_diamR.txt")
-
-write2File <- FALSE
+write2File <- FALSE # write to file?
+if (file.exists("./Data/EC50_diameter_diamR.txt") & write2File){
+  file.remove("./Data/EC50_diameter_diamR.txt")} 
 
 # create empty list with colNames
 EC50Raw <- data.frame(straiName = character(0), EC50 = numeric(0), 
-                      StdErr = numeric(0), Upper = numeric(), Lower = numeric())
-for (strainSet in setStrainList ){
+                      StdErr = numeric(0), Lower = numeric(0), 
+                      Upper = numeric(0), pvalue = numeric(0))
+
+# loop through all individual set-Strain names and
+# calculate EC50 values seprately
+for (strainSet in levels(fullPlateData$setStrain) ){
   # subset data by strain set
-  subData <- subset(fullPlateData, subset = fullPlateData$setStrain == strainSet)
+  subData <- subset(fullPlateData, 
+                    subset = fullPlateData$setStrain == strainSet)
   
   # back calculate the radius
   subData$diameter2 <- with(subData, 2*sqrt(Area2/3.1415926))
@@ -82,34 +94,59 @@ for (strainSet in setStrainList ){
   # calculate mycelia growth rate per day in centermeters
   subData$diameterR <- (subData$diameter2 - subData$diameter1) / 14
   subData.m1 <- drm(diameterR ~ Conc, 
-                   format(setStrain, trim=TRUE),
-                   fct=LL.4(names=c("slope","Lower Limit","Upper Limit","EC50")),
-                   data=subData)
+                    format(setStrain, trim=TRUE),
+                    fct=LL.4(names=c("slope",
+                                     "Lower Limit",
+                                     "Upper Limit","EC50")),
+                    data=subData)
   ED_table <- ED(subData.m1,c(50), interval="delta")
-  EC50Raw <- rbind(EC50Raw, ED_table)
-  
-  if (write2File){
-  write.table(format(ED_table,digits=3,trim=TRUE),"EC50_diameter_diamR.txt",
-               append = TRUE, sep = "\t",col.names = FALSE, eol = "\n",
-               quote = FALSE, row.names=TRUE)}
-  }
-colnames(EC50Raw) <- c( "EC50", "StdErr", "Upper", "Lower")
+  ModelSummary <- summary(subData.m1)
+  # include pvalue along with EC50 calculation
+  ED_table_p <- cbind(ED_table,pvalue = ModelSummary$coefficients[4,4])
+  EC50Raw <- rbind(EC50Raw, ED_table_p)
+  if (write2File){ # if I want to write tab delimited file
+    write.table(format(ED_table_p,digits=3,trim=TRUE), eol = "\n",
+                "./data/EC50_diameter_diamR.txt", sep = "\t",
+                 col.names = FALSE, quote = FALSE, row.names=TRUE)}
+}
 
-# split the row setStrain name into two columns
+colnames(EC50Raw) <- c( "EC50", "StdErr", "Lower", "Upper","pvalue")
+
+# split the row setStrain name into two columns PARSE strain names and sets
 # strainCols <- do.call(rbind, strsplit(rownames(EC50Sum), "@"))
-strainSplitList <- stringr::str_split_fixed(rownames(EC50Sum), "@",2)
+strainSplitList <- str_split_fixed(rownames(EC50Raw), "@", 2)
 strainSplitList <- cbind(strainSplitList, 
-                         stringr::str_split_fixed(strainSplitList[,2],":",2))
+                         str_split_fixed(strainSplitList[,2],":",2))
 strainSplitList <- strainSplitList[,c(1,3)]
 colnames(strainSplitList) <- c("Set","Strain")
 EC50Sum <- cbind(EC50Raw, strainSplitList)
 rownames(EC50Sum) <- paste(EC50Sum$Strain,EC50Sum$Set,sep = "_")
+EC50Sum <- na.exclude(EC50Sum)
+
+# need to filter non-significant EC50 estimations for the EC50 dataframe
+# level of significance: alpha = 0.05
+EC50SumFilter <- EC50Sum[EC50Sum$pvalue <= 0.05,]
+
+# clean up environment by removing unused objects
+rm(subData.m1, strainSet, listPlate, ModelSummary, write2File, fileList)
+rm(EC50Sum, EC50Raw, strainSplitList, ED_table, ED_table_p, subData)
 
 ```
+
+
+
 ## 4, Results
 
+### 1) Statistics
+### 2) Figures
+```{r Histogram EC50 distrubnution, echo=FALSE}
 
 
+```
+
+
+
+### 3)
 
 ## 5, Notes and comments
 
