@@ -158,7 +158,7 @@ ggplot(EC50SumFilter, aes(x=EC50)) +
 ```
 
 
-####Figure 2 Growth curve fit
+####Figure 2 Growth curve fit (Plate)
 ```{r growth curve fit (plate), echo=FALSE, fig.width=10, warning=FALSE}
 par(mfrow = c(1,2))
 # good fit strains
@@ -221,7 +221,7 @@ rm(selStrain1Model,selStrain2Model)
 
 ***
 
-#Part II Conidia Assay
+#Part II Conidia Germination Assay
 
 ## 1, Dependencies and data descriptions
 ```{r import data conidia, echo = FALSE,  message = FALSE}
@@ -304,7 +304,48 @@ ggplot(coniEC50SumFilter, aes(x=EC50)) +
 ```
 
 
+####Figure 2 Growth curve fit (conidia)
+```{r growth curve fit (conidia), echo=FALSE, fig.width=10, warning=FALSE}
+par(mfrow = c(1,1))
+# good fit strains
+selStrain2 <- c("13Fv171@3","13Fv180@3","13Fv188@10")
+selStrain2Data <- coniNoNaData[coniNoNaData$setStrain %in% selStrain2,]
+selStrain2Model <- drm(germinate~Conc,
+                  format(Isolate,trim=TRUE),
+                  fct=LL.4(names=c("slope","Lower","Upper","EC50")),
+                  data=selStrain2Data)
+plot(selStrain2Model,type = "all", broken = TRUE, col = TRUE, cex.legend = 0.9,
+     #level=selStrain2,
+     xlab = expression('Log10 Transformed Fluopyram EC'[50]*' (mg/L)'),
+     ylab = "Mycelial Growth Rate (cm/d)", cex.axis = 1,
+     main = "Normal data fit", ylim = c(0, 50))
+     # legendPos = c(20,0.04))
+     #ylim = c(0,0.14))
 
+# bad fit strains
+selStrain1 <- c("MIBer_A5", "STJ_3a")
+selStrain1Data <- fullPlateData[fullPlateData$Strain %in% selStrain1,]
+selStrain1Data$diameter2 <- with(selStrain1Data, 2*sqrt(Area2/3.1415926))
+selStrain1Data$diameter1 <- with(selStrain1Data, 2*sqrt(Area1/3.1415926))
+selStrain1Data$diameterR <- with(selStrain1Data,(diameter2-diameter1)/14)
+selStrain1Model <- drm(diameterR~Conc,
+                  format(Strain,trim=TRUE),
+                  fct=LL.4(names=c("slope","Lower","Upper","EC50")),
+                  data=selStrain1Data)
+plot(selStrain1Model,type = "all",
+     broken = TRUE,
+     col = TRUE,
+     cex.legend = 0.9,
+     xlab = expression('Log10 Transformed Fluopyram EC'[50]*' (mg/L)'),
+     ylab = "Mycelial Growth Rate (cm/d)",
+     cex.axis = 1,
+     main = "Hormetic effect",
+     legendPos = c(95,0.14),
+     ylim = c(0,0.14))
+
+rm(selStrain1, selStrain2, selStrain1Data, selStrain2Data)
+rm(selStrain1Model,selStrain2Model)
+```
 
 
 
