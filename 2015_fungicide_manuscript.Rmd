@@ -4,7 +4,7 @@ author: "Jie Wang"
 date: "December 15, 2015"
 output: html_document
 ---
-
+#Part I Poison Plate Assay
 ## 1, Background
 _Fusarium virguliforme_ is a soilborne soybean pathogen infected and colonized
 in soybean roots. Disease management strategies are still lacking to deal with
@@ -30,21 +30,23 @@ library("drc")
 library("ggplot2")
 library("dplyr")
 library("stringr")
+library("beeswarm")
 
 # functions
 
 # trim leading and trailling space, "|" is a boolean "OR"
-trim <- function (x) gsub("^\\s+|\\s+$", "", x) 
-
+trim <- function (x) gsub("^\\s+|\\s+$", "", x)
+# convert factors to numeric and suppose to be an efficient way
+as.numeric.factor <- function(x) {as.numeric(levels(x))[x]}
 ```
 
 ### 2) import data and manipulations
-```{r import data, echo = FALSE,  message = FALSE}
-dataPlatePath <- file.path("/Users/wjidea/GoogleDrive/Graduate_Study",
-                          "0_Research_projects/5_Fungicide_project",
-                          "2014_Bayer_fluopyram/FvFungicideFluopyram/Data")
+```{r import data plate, echo = FALSE,  message = FALSE}
+dataPath <- file.path("/Users/wjidea/GoogleDrive/Graduate_Study",
+                      "0_Research_projects/5_Fungicide_project",
+                      "2014_Bayer_fluopyram/FvFungicideFluopyram/Data")
 # filesPlateNames <- dir(dataPlatePath, pattern = "^fungal_set[0-9]*$")
-fileList <- list.files(path = dataPlatePath, full.names = TRUE, 
+fileList <- list.files(path = dataPath, full.names = TRUE, 
                        pattern = "^fungal_set[0-9]*$")
 listPlate <- lapply(fileList, read.table, header = TRUE, sep="\t")
 listPlate <- na.omit(listPlate)
@@ -66,11 +68,10 @@ fullPlateData$Set <- as.factor(fullPlateData$Set)
 fullPlateData$setStrain <- paste(fullPlateData$Set,fullPlateData$Strain, sep="@")
 fullPlateData$setStrain <- factor(fullPlateData$setStrain)
 
-
 ```
 
 ### 3) Calculate EC50 for poison plate assay
-```{r cal plate EC50, results = "hide", warning = FALSE, cache = TRUE}
+```{r plate EC50, results = "hide", warning = FALSE, cache = TRUE, echo = FALSE}
 # calculate EC50 for each of the strainSet
 write2File <- FALSE # write to file?
 if (file.exists("./Data/EC50_diameter_diamR.txt") & write2File){
@@ -127,7 +128,7 @@ EC50Sum <- na.exclude(EC50Sum)
 # level of significance: alpha = 0.05
 EC50SumFilter <- EC50Sum[EC50Sum$pvalue <= 0.05,]
 
-# clean up environment by removing unused objects
+# clean up environment and remove no longer needed objects
 rm(subData.m1, strainSet, listPlate, ModelSummary, write2File, fileList)
 rm(EC50Sum, EC50Raw, strainSplitList, ED_table, ED_table_p, subData)
 
@@ -139,14 +140,195 @@ rm(EC50Sum, EC50Raw, strainSplitList, ED_table, ED_table_p, subData)
 
 ### 1) Statistics
 ### 2) Figures
-```{r Histogram EC50 distrubnution, echo=FALSE}
+
+####Figure 1 EC50 histogram
+```{r Histogram EC50 distrubnution (plate), echo=FALSE}
+ggplot(EC50SumFilter, aes(x=EC50)) + 
+  geom_histogram(aes(y=(..count..)),binwidth=.5, 
+                 colour="dark green", fill="white",size=0.9) +
+  geom_vline(aes(xintercept=mean(EC50, na.rm=T)),colour="red", 
+             linetype="dashed", size=1) + theme_grey() + geom_rug() + 
+  scale_x_continuous(breaks=0:10) + 
+  labs(y="Frequency", x=expression('Fluopyram EC'[50]*' (mg/L)')) +
+  theme_classic()+
+  theme(axis.text = element_text(size=14), 
+        axis.title = element_text(size=16),
+        axis.text.x=element_text(colour="black"), 
+        axis.text.y=element_text(colour="black")) 
+```
+
+
+####Figure 2 Growth curve fit
+```{r growth curve fit (plate), echo=FALSE, fig.width=10, warning=FALSE}
+par(mfrow = c(1,2))
+# good fit strains
+selStrain2 <- c("12@KSSH_A2","12@MIVB_A5")
+selStrain2Data <- fullPlateData[fullPlateData$setStrain %in% selStrain2,]
+selStrain2Data$diameter2 <- with(selStrain2Data, 2*sqrt(Area2/3.1415926))
+selStrain2Data$diameter1 <- with(selStrain2Data, 2*sqrt(Area1/3.1415926))
+selStrain2Data$diameterR <- with(selStrain2Data,(diameter2-diameter1)/14)
+selStrain2Model <- drm(diameterR~Conc,
+                  format(Strain,trim=TRUE),
+                  fct=LL.4(names=c("slope","Lower","Upper","EC50")),
+                  data=selStrain2Data)
+plot(selStrain2Model,type = "all",
+     broken = TRUE,
+     col = TRUE,
+     cex.legend = 0.9,
+     level=c("KSSH_A2","MIVB_A5"),
+     xlab = expression('Log10 Transformed Fluopyram EC'[50]*' (mg/L)'),
+     ylab = "Mycelial Growth Rate (cm/d)",
+     cex.axis = 1,
+     main = "Normal data fit",
+     legendPos = c(95,0.14),
+     ylim = c(0,0.14))
+
+# bad fit strains
+selStrain1 <- c("MIBer_A5", "STJ_3a")
+selStrain1Data <- fullPlateData[fullPlateData$Strain %in% selStrain1,]
+selStrain1Data$diameter2 <- with(selStrain1Data, 2*sqrt(Area2/3.1415926))
+selStrain1Data$diameter1 <- with(selStrain1Data, 2*sqrt(Area1/3.1415926))
+selStrain1Data$diameterR <- with(selStrain1Data,(diameter2-diameter1)/14)
+selStrain1Model <- drm(diameterR~Conc,
+                  format(Strain,trim=TRUE),
+                  fct=LL.4(names=c("slope","Lower","Upper","EC50")),
+                  data=selStrain1Data)
+plot(selStrain1Model,type = "all",
+     broken = TRUE,
+     col = TRUE,
+     cex.legend = 0.9,
+     xlab = expression('Log10 Transformed Fluopyram EC'[50]*' (mg/L)'),
+     ylab = "Mycelial Growth Rate (cm/d)",
+     cex.axis = 1,
+     main = "Hormetic effect",
+     legendPos = c(95,0.14),
+     ylim = c(0,0.14))
+
+rm(selStrain1, selStrain2, selStrain1Data, selStrain2Data)
+rm(selStrain1Model,selStrain2Model)
+```
+
+####Figure 3 method validation
+```{r plate method validation, echo=FALSE}
+
 
 
 ```
 
-
-
-### 3)
+### 3) Other comments
 
 ## 5, Notes and comments
+
+***
+
+#Part II Conidia Assay
+
+## 1, Dependencies and data descriptions
+```{r import data conidia, echo = FALSE,  message = FALSE}
+# Prepare data path
+conidiaDataPath <- paste(dataPath,"/conidiaGermAssayOrganized_2015.csv",sep="")
+conidiaData <- read.csv(conidiaDataPath, header = TRUE)
+
+# gather cols into rows
+coniDataFormat <- conidiaData %>% tidyr::gather(Conc, germinate, X0:X100)
+levels(coniDataFormat$Conc) <- c(0, 0.01, 0.1, 1, 5, 10, 20, 100)
+coniDataFormat$Conc <- as.numeric.factor(coniDataFormat$Conc)
+coniNoNaData <- na.exclude(coniDataFormat)
+coniNoNaData$setStrain <- with(coniNoNaData, paste(Isolate,Trial,sep="@"))
+coniNoNaData$setStrain <- as.factor(coniNoNaData$setStrain)
+```
+
+### 2) Calculate EC50 for conidia assay
+```{r conida EC50, results = "hide", warning = FALSE, cache = TRUE, echo=FALSE}
+# create empty list with colNames
+EC50Raw <- data.frame(straiName = character(0), EC50 = numeric(0), 
+                      StdErr = numeric(0), Lower = numeric(0), 
+                      Upper = numeric(0), pvalue = numeric(0))
+
+# loop through all individual set-Strain names and
+# calculate EC50 values seprately
+for (strainSet in levels(coniNoNaData$setStrain) ){
+  # subset data by strain set
+  subData <- subset(coniNoNaData, 
+                    subset = coniNoNaData$setStrain == strainSet)
+  subData.m1 <- drm(germinate ~ Conc, 
+                    format(setStrain, trim=TRUE),
+                    fct=LL.4(names=c("slope",
+                                     "Lower Limit",
+                                     "Upper Limit","EC50")),
+                    data=subData)
+  ED_table <- ED(subData.m1,c(50), interval="delta")
+  ModelSummary <- summary(subData.m1)
+  # include pvalue along with EC50 calculation
+  ED_table_p <- cbind(ED_table,pvalue = ModelSummary$coefficients[4,4])
+  EC50Raw <- rbind(EC50Raw, ED_table_p)
+}
+
+colnames(EC50Raw) <- c( "EC50", "StdErr", "Lower", "Upper","pvalue")
+
+# split the row setStrain name into two columns PARSE strain names and sets
+# strainCols <- do.call(rbind, strsplit(rownames(EC50Sum), "@"))
+strainSplitList <- str_split_fixed(rownames(EC50Raw), "@", 2)
+strainSplitList <- cbind(strainSplitList, 
+                         str_split_fixed(strainSplitList[,2],":",2))
+strainSplitList <- strainSplitList[,c(1,3)]
+colnames(strainSplitList) <- c("Strain", "Set")
+EC50Sum <- cbind(EC50Raw, strainSplitList)
+rownames(EC50Sum) <- paste(EC50Sum$Strain,EC50Sum$Set,sep = "_")
+EC50Sum <- na.exclude(EC50Sum)
+
+# need to filter non-significant EC50 estimations for the EC50 dataframe
+# level of significance: alpha = 0.05
+coniEC50SumFilter <- EC50Sum[EC50Sum$pvalue <= 0.05,]
+
+# clean up environment and remove no longer needed objects
+rm(subData.m1, strainSet, listPlate, ModelSummary, write2File, fileList)
+rm(EC50Sum, EC50Raw, strainSplitList, ED_table, ED_table_p, subData)
+
+```
+
+####Figure 1 EC50 histogram (conidia)
+```{r Histogram EC50 distrubnution (conida), echo=FALSE}
+ggplot(coniEC50SumFilter, aes(x=EC50)) + 
+  geom_histogram(aes(y=(..count..)),binwidth=.5, 
+                 colour="dark green", fill="white",size=0.9) +
+  geom_vline(aes(xintercept=mean(EC50, na.rm=T)),colour="red", 
+             linetype="dashed", size=1) + theme_grey() + geom_rug() + 
+  scale_x_continuous(breaks=0:12) + 
+  labs(y="Frequency", x=expression('Fluopyram EC'[50]*' (mg/L)')) +
+  theme_classic()+
+  theme(axis.text = element_text(size=14), 
+        axis.title = element_text(size=16),
+        axis.text.x=element_text(colour="black"), 
+        axis.text.y=element_text(colour="black")) 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

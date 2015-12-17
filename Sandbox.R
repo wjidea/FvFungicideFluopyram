@@ -1,3 +1,24 @@
+
+
+
+
+
+
+
+as.numeric(levels(coniDataFormat$Conc))[coniDataFormat$Conc]
+
+
+
+
+
+
+
+
+
+
+
+
+
 TestData <- subset(fullPlateData, subset = fullPlateData$setStrain == "9@VB-1")
 
 # back calculate the radius
