@@ -77,7 +77,7 @@ write2File <- FALSE # write to file?
 if (file.exists("./Data/EC50_diameter_diamR.txt") & write2File){
   file.remove("./Data/EC50_diameter_diamR.txt")} 
 
-# create empty list with colNames
+# create empty list with colNames 
 EC50Raw <- data.frame(straiName = character(0), EC50 = numeric(0), 
                       StdErr = numeric(0), Lower = numeric(0), 
                       Upper = numeric(0), pvalue = numeric(0))
@@ -126,7 +126,7 @@ EC50Sum <- na.exclude(EC50Sum)
 
 # need to filter non-significant EC50 estimations for the EC50 dataframe
 # level of significance: alpha = 0.05
-EC50SumFilter <- EC50Sum[EC50Sum$pvalue <= 0.05,]
+EC50SumFilterPlate <- EC50Sum[EC50Sum$pvalue <= 0.05,]
 
 # clean up environment and remove no longer needed objects
 rm(subData.m1, strainSet, listPlate, ModelSummary, write2File, fileList)
@@ -176,7 +176,7 @@ plot(selStrain2Model,type = "all",
      col = TRUE,
      cex.legend = 0.9,
      level=c("KSSH_A2","MIVB_A5"),
-     xlab = expression('Log10 Transformed Fluopyram EC'[50]*' (mg/L)'),
+     xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
      ylab = "Mycelial Growth Rate (cm/d)",
      cex.axis = 1,
      main = "Normal data fit",
@@ -197,7 +197,7 @@ plot(selStrain1Model,type = "all",
      broken = TRUE,
      col = TRUE,
      cex.legend = 0.9,
-     xlab = expression('Log10 Transformed Fluopyram EC'[50]*' (mg/L)'),
+     xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
      ylab = "Mycelial Growth Rate (cm/d)",
      cex.axis = 1,
      main = "Hormetic effect",
@@ -218,6 +218,14 @@ rm(selStrain1Model,selStrain2Model)
 ### 3) Other comments
 
 ## 5, Notes and comments
+
+```{r write table in file (plate), echo=FALSE}
+write.csv2(EC50SumFilterPlate, file = "./Data/EC50SumPlate.csv",quote = "FALSE")
+
+
+
+```
+
 
 ***
 
@@ -279,10 +287,10 @@ EC50Sum <- na.exclude(EC50Sum)
 
 # need to filter non-significant EC50 estimations for the EC50 dataframe
 # level of significance: alpha = 0.05
-coniEC50SumFilter <- EC50Sum[EC50Sum$pvalue <= 0.05,]
+EC50SumFilterConidia <- EC50Sum[EC50Sum$pvalue <= 0.05,]
 
 # clean up environment and remove no longer needed objects
-rm(subData.m1, strainSet, listPlate, ModelSummary, write2File, fileList)
+rm(subData.m1, strainSet, ModelSummary)
 rm(EC50Sum, EC50Raw, strainSplitList, ED_table, ED_table_p, subData)
 
 ```
@@ -316,32 +324,32 @@ selStrain2Model <- drm(germinate~Conc,
                   data=selStrain2Data)
 plot(selStrain2Model,type = "all", broken = TRUE, col = TRUE, cex.legend = 0.9,
      #level=selStrain2,
-     xlab = expression('Log10 Transformed Fluopyram EC'[50]*' (mg/L)'),
-     ylab = "Mycelial Growth Rate (cm/d)", cex.axis = 1,
+     xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
+     ylab = "Germinated conidia", cex.axis = 1,
      main = "Normal data fit", ylim = c(0, 50))
      # legendPos = c(20,0.04))
      #ylim = c(0,0.14))
 
 # bad fit strains
-selStrain1 <- c("MIBer_A5", "STJ_3a")
-selStrain1Data <- fullPlateData[fullPlateData$Strain %in% selStrain1,]
-selStrain1Data$diameter2 <- with(selStrain1Data, 2*sqrt(Area2/3.1415926))
-selStrain1Data$diameter1 <- with(selStrain1Data, 2*sqrt(Area1/3.1415926))
-selStrain1Data$diameterR <- with(selStrain1Data,(diameter2-diameter1)/14)
-selStrain1Model <- drm(diameterR~Conc,
-                  format(Strain,trim=TRUE),
-                  fct=LL.4(names=c("slope","Lower","Upper","EC50")),
-                  data=selStrain1Data)
-plot(selStrain1Model,type = "all",
-     broken = TRUE,
-     col = TRUE,
-     cex.legend = 0.9,
-     xlab = expression('Log10 Transformed Fluopyram EC'[50]*' (mg/L)'),
-     ylab = "Mycelial Growth Rate (cm/d)",
-     cex.axis = 1,
-     main = "Hormetic effect",
-     legendPos = c(95,0.14),
-     ylim = c(0,0.14))
+# selStrain1 <- c("MIBer_A5", "STJ_3a")
+# selStrain1Data <- fullPlateData[fullPlateData$Strain %in% selStrain1,]
+# selStrain1Data$diameter2 <- with(selStrain1Data, 2*sqrt(Area2/3.1415926))
+# selStrain1Data$diameter1 <- with(selStrain1Data, 2*sqrt(Area1/3.1415926))
+# selStrain1Data$diameterR <- with(selStrain1Data,(diameter2-diameter1)/14)
+# selStrain1Model <- drm(diameterR~Conc,
+#                   format(Strain,trim=TRUE),
+#                   fct=LL.4(names=c("slope","Lower","Upper","EC50")),
+#                   data=selStrain1Data)
+# plot(selStrain1Model,type = "all",
+#      broken = TRUE,
+#      col = TRUE,
+#      cex.legend = 0.9,
+#      xlab = expression('Log10 Transformed Fluopyram EC'[50]*' (mg/L)'),
+#      ylab = "Mycelial Growth Rate (cm/d)",
+#      cex.axis = 1,
+#      main = "Hormetic effect",
+#      legendPos = c(95,0.14),
+#      ylim = c(0,0.14))
 
 rm(selStrain1, selStrain2, selStrain1Data, selStrain2Data)
 rm(selStrain1Model,selStrain2Model)
