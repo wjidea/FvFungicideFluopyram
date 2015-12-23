@@ -16,3 +16,28 @@ testSummary <- summary(TestData.m1)
 ED_table_p <- cbind(ED_table,pvalue = testSummary$coefficients[4,4])
 
 
+# import demographic data for MI and IL experiment
+setwd(dataPath)
+MIStrainInfo <- read.csv("StrainInfoMI.csv", header = TRUE )
+MIStrainInfoSub <- subset(MIStrainInfo, 
+                          select = c("isolate","state","county","year"))
+ILStrainInfo <- read.csv("StrainInfoIL.csv", header = TRUE )
+ILStrainInfoSub <- subset(ILStrainInfo,
+                          select = c("IsolateID", "State", "County", "year"))
+colnames(ILStrainInfoSub) <- c("isolate","state","county","year")
+strainInfoAll <- rbind(ILStrainInfoSub, MIStrainInfoSub)
+
+EC50SumFilterPlate$strainName <- do.call(str_replace_all, 
+                                 list(EC50SumFilterPlate$Strain, "_", "-"))
+EC50SumFilterConidia$strainName <- do.call(str_replace_all, 
+                                 list(EC50SumFilterConidia$Strain, "_", "-"))
+
+EC50SumPlateGeoYear <- merge(EC50SumFilterPlate, strainInfoAll, 
+                             by.x = "strainName", by.y = "isolate")
+EC50SumConidiaGeoYear <- merge(EC50SumFilterConidia, ILStrainInfoSub, 
+                               by.x = "strainName", by.y = "isolate")
+
+
+
+
+

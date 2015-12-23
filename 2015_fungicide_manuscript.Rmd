@@ -44,7 +44,7 @@ as.numeric.factor <- function(x) {as.numeric(levels(x))[x]}
 ```{r import data plate, echo = FALSE,  message = FALSE}
 dataPath <- file.path("/Users/wjidea/GoogleDrive/Graduate_Study",
                       "0_Research_projects/5_Fungicide_project",
-                      "2014_Bayer_fluopyram/FvFungicideFluopyram/Data")
+                      "0_2014_Bayer_fluopyram/FvFungicideFluopyram/Data")
 # filesPlateNames <- dir(dataPlatePath, pattern = "^fungal_set[0-9]*$")
 fileList <- list.files(path = dataPath, full.names = TRUE, 
                        pattern = "^fungal_set[0-9]*$")
@@ -143,7 +143,7 @@ rm(EC50Sum, EC50Raw, strainSplitList, ED_table, ED_table_p, subData)
 
 ####Figure 1 EC50 histogram
 ```{r Histogram EC50 distrubnution (plate), echo=FALSE}
-ggplot(EC50SumFilter, aes(x=EC50)) + 
+ggplot(EC50SumFilterPlate, aes(x=EC50)) + 
   geom_histogram(aes(y=(..count..)),binwidth=.5, 
                  colour="dark green", fill="white",size=0.9) +
   geom_vline(aes(xintercept=mean(EC50, na.rm=T)),colour="red", 
@@ -220,7 +220,7 @@ rm(selStrain1Model,selStrain2Model)
 ## 5, Notes and comments
 
 ```{r write table in file (plate), echo=FALSE}
-write.csv2(EC50SumFilterPlate, file = "./Data/EC50SumPlate.csv",quote = "FALSE")
+# write.csv2(EC50SumFilterPlate, file = "./Data/EC50SumPlate.csv",quote = FALSE)
 
 
 
@@ -234,7 +234,7 @@ write.csv2(EC50SumFilterPlate, file = "./Data/EC50SumPlate.csv",quote = "FALSE")
 ## 1, Dependencies and data descriptions
 ```{r import data conidia, echo = FALSE,  message = FALSE}
 # Prepare data path
-conidiaDataPath <- paste(dataPath,"/conidiaGermAssayOrganized_2015.csv",sep="")
+conidiaDataPath <- paste(dataPath,"/conidiaAssay.csv",sep="")
 conidiaData <- read.csv(conidiaDataPath, header = TRUE)
 
 # gather cols into rows
@@ -297,7 +297,7 @@ rm(EC50Sum, EC50Raw, strainSplitList, ED_table, ED_table_p, subData)
 
 ####Figure 1 EC50 histogram (conidia)
 ```{r Histogram EC50 distrubnution (conida), echo=FALSE}
-ggplot(coniEC50SumFilter, aes(x=EC50)) + 
+ggplot(EC50SumFilterConidia, aes(x=EC50)) + 
   geom_histogram(aes(y=(..count..)),binwidth=.5, 
                  colour="dark green", fill="white",size=0.9) +
   geom_vline(aes(xintercept=mean(EC50, na.rm=T)),colour="red", 
