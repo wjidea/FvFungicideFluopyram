@@ -38,6 +38,7 @@ EC50SumConidiaGeoYear <- merge(EC50SumFilterConidia, ILStrainInfoSub,
                                by.x = "strainName", by.y = "isolate")
 
 
+accuEC <- function(data, method = c(),...){
+  
 
-
-
+}
