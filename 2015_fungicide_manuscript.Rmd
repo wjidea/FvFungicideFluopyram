@@ -32,7 +32,7 @@ library("dplyr")
 library("stringr")
 library("beeswarm")
 
-# functions
+# Customized functions
 
 # trim leading and trailling space, "|" is a boolean "OR"
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
@@ -65,13 +65,28 @@ fullPlateData$Strain[fullPlateData$Strain == "Mont1_GH"] <- "Mont1"
 fullPlateData$Set <- as.factor(fullPlateData$Set)
 
 # set strain and set name combination
-fullPlateData$setStrain <- paste(fullPlateData$Set,fullPlateData$Strain, sep="@")
+fullPlateData$setStrain <- paste(fullPlateData$Set,
+                                 fullPlateData$Strain, sep="@")
 fullPlateData$setStrain <- factor(fullPlateData$setStrain)
+
+# calculate colony growth rate
+fullPlateData$growthRate <- (sqrt(fullPlateData$Area2/pi) - 
+                               sqrt(fullPlateData$Area1/pi))/10
+
+# calculate relative growth rate compare to 0 control group
+for (strain in fullPlateData$setStrain){
+  subData.1 <- fullPlateData[fullPlateData$setStrain == strain,]
+  # minConc <- min(as.numeric.factor(subData$Conc))
+  controlGrowthRate <- mean(subData.1$growthRate[subData.1$Conc == 0.0])
+  fullPlateData$relGrowthRate[fullPlateData$setStrain == strain] <- 
+    subData.1$growthRate / controlGrowthRate
+}
+
 
 ```
 
 ### 3) Calculate EC50 for poison plate assay
-```{r plate EC50, results = "hide", warning = FALSE, cache = TRUE, echo = FALSE}
+```{r plate EC50, results = "hide", warning = FALSE, echo = FALSE}
 # calculate EC50 for each of the strainSet
 write2File <- FALSE # write to file?
 if (file.exists("./Data/EC50_diameter_diamR.txt") & write2File){
@@ -88,13 +103,7 @@ for (strainSet in levels(fullPlateData$setStrain) ){
   # subset data by strain set
   subData <- subset(fullPlateData, 
                     subset = fullPlateData$setStrain == strainSet)
-  
-  # back calculate the radius
-  subData$diameter2 <- with(subData, 2*sqrt(Area2/3.1415926))
-  subData$diameter1 <- with(subData, 2*sqrt(Area1/3.1415926))
-  # calculate mycelia growth rate per day in centermeters
-  subData$diameterR <- (subData$diameter2 - subData$diameter1) / 14
-  subData.m1 <- drm(diameterR ~ Conc, 
+  subData.m1 <- drm(growthRate ~ Conc, 
                     format(setStrain, trim=TRUE),
                     fct=LL.4(names=c("slope",
                                      "Lower Limit",
@@ -144,17 +153,19 @@ rm(EC50Sum, EC50Raw, strainSplitList, ED_table, ED_table_p, subData)
 ####Figure 1 EC50 histogram
 ```{r Histogram EC50 distrubnution (plate), echo=FALSE}
 ggplot(EC50SumFilterPlate, aes(x=EC50)) + 
-  geom_histogram(aes(y=(..count..)),binwidth=.5, 
+  geom_histogram(aes(y=(..count..)),
+                 # stat = "identity",
+                 binwidth=.5, 
                  colour="dark green", fill="white",size=0.9) +
   geom_vline(aes(xintercept=mean(EC50, na.rm=T)),colour="red", 
              linetype="dashed", size=1) + theme_grey() + geom_rug() + 
   scale_x_continuous(breaks=0:10) + 
   labs(y="Frequency", x=expression('Fluopyram EC'[50]*' (mg/L)')) +
-  theme_classic()+
-  theme(axis.text = element_text(size=14), 
-        axis.title = element_text(size=16),
-        axis.text.x=element_text(colour="black"), 
-        axis.text.y=element_text(colour="black")) 
+  theme_classic() +
+  theme(axis.text   = element_text(size=14), 
+        axis.title  = element_text(size=16),
+        axis.text.x = element_text(colour="black"), 
+        axis.text.y = element_text(colour="black")) 
 ```
 
 
@@ -184,7 +195,7 @@ plot(selStrain2Model,type = "all",
      ylim = c(0,0.14))
 
 # bad fit strains
-selStrain1 <- c("MIBer_A5", "STJ_3a")
+selStrain1 <- c("MIBer_A5", "STJ3a")
 selStrain1Data <- fullPlateData[fullPlateData$Strain %in% selStrain1,]
 selStrain1Data$diameter2 <- with(selStrain1Data, 2*sqrt(Area2/3.1415926))
 selStrain1Data$diameter1 <- with(selStrain1Data, 2*sqrt(Area1/3.1415926))
@@ -247,7 +258,7 @@ coniNoNaData$setStrain <- as.factor(coniNoNaData$setStrain)
 ```
 
 ### 2) Calculate EC50 for conidia assay
-```{r conida EC50, results = "hide", warning = FALSE, cache = TRUE, echo=FALSE}
+```{r conida EC50, results = "hide", warning = FALSE, cache=TRUE, echo=FALSE}
 # create empty list with colNames
 EC50Raw <- data.frame(straiName = character(0), EC50 = numeric(0), 
                       StdErr = numeric(0), Lower = numeric(0), 
@@ -355,7 +366,29 @@ rm(selStrain1, selStrain2, selStrain1Data, selStrain2Data)
 rm(selStrain1Model,selStrain2Model)
 ```
 
+```{r Figure 3 EC50 distribution based on state}
+# import demographic data for MI and IL experiment
+setwd(dataPath)
+MIStrainInfo <- read.csv("StrainInfoMI.csv", header = TRUE )
+MIStrainInfoSub <- subset(MIStrainInfo, 
+                          select = c("isolate","state","county","year"))
+ILStrainInfo <- read.csv("StrainInfoIL.csv", header = TRUE )
+ILStrainInfoSub <- subset(ILStrainInfo,
+                          select = c("IsolateID", "State", "County", "year"))
+colnames(ILStrainInfoSub) <- c("isolate","state","county","year")
+strainInfoAll <- rbind(ILStrainInfoSub, MIStrainInfoSub)
 
+EC50SumFilterPlate$strainName <- do.call(str_replace_all, 
+                                 list(EC50SumFilterPlate$Strain, "_", "-"))
+EC50SumFilterConidia$strainName <- do.call(str_replace_all, 
+                                 list(EC50SumFilterConidia$Strain, "_", "-"))
+
+EC50SumPlateGeoYear <- merge(EC50SumFilterPlate, strainInfoAll, 
+                             by.x = "strainName", by.y = "isolate")
+EC50SumConidiaGeoYear <- merge(EC50SumFilterConidia, ILStrainInfoSub, 
+                               by.x = "strainName", by.y = "isolate")
+
+```
 
 
 

@@ -38,7 +38,11 @@ EC50SumConidiaGeoYear <- merge(EC50SumFilterConidia, ILStrainInfoSub,
                                by.x = "strainName", by.y = "isolate")
 
 
+# Function to calculate accurate EC50 values
 accuEC <- function(data, method = c(),...){
   
 
 }
+
+
+# Test code
