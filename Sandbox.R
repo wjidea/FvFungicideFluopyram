@@ -25,7 +25,7 @@ ILStrainInfo <- read.csv("StrainInfoIL.csv", header = TRUE )
 ILStrainInfoSub <- subset(ILStrainInfo,
                           select = c("IsolateID", "State", "County", "year"))
 colnames(ILStrainInfoSub) <- c("isolate","state","county","year")
-strainInfoAll <- rbind(ILStrainInfoSub, MIStrainInfoSub)
+strainInfoAll <- rbind(ILStrainInfoSub[1:53,], MIStrainInfoSub)
 
 EC50SumFilterPlate$strainName <- do.call(str_replace_all, 
                                  list(EC50SumFilterPlate$Strain, "_", "-"))
@@ -36,8 +36,14 @@ EC50SumPlateGeoYear <- merge(EC50SumFilterPlate, strainInfoAll,
                              by.x = "strainName", by.y = "isolate")
 EC50SumConidiaGeoYear <- merge(EC50SumFilterConidia, ILStrainInfoSub, 
                                by.x = "strainName", by.y = "isolate")
+dim(EC50SumPlateGeoYear)
+dim(EC50SumFilterPlate)
 
+EC50SumPlateGeoYear[!(EC50SumPlateGeoYear$strainName %in% EC50SumFilterPlate$strainName),]
+EC50SumFilterPlate[!(EC50SumFilterPlate$strainName %in% EC50SumPlateGeoYear$strainName),]
 
+EC50SumConidiaGeoYear[!(EC50SumConidiaGeoYear$strainName %in% EC50SumFilterConidia$strainName),]
+EC50SumFilterConidia[!(EC50SumFilterConidia$strainName %in% EC50SumConidiaGeoYear$strainName),]
 # Function to calculate accurate EC50 values
 accuEC <- function(data, method = c(),...){
   

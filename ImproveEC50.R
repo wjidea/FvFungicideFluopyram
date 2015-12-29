@@ -22,8 +22,6 @@ drm.1 <- function(subdata, conc, measure, straiName,drmMethod = c(),...) {
                                   "Upper Limit","EC50")),
                  data=subData)
 # return EC50 tables
-  
-  
 } 
 
 for (strainSet in levels(fullPlateData$setStrain) ){
@@ -52,23 +50,3 @@ for (strainSet in levels(fullPlateData$setStrain) ){
                   col.names = FALSE, quote = FALSE, row.names=TRUE)}
   }
 }
-
-
-
-
-testDf <- EC50SumFilterPlate[,1:4]
-
-testDf.1 <-
-  rbind(data.frame(row.names = "TestStrain", EC50 = 30, StdErr = NA,
-                   Lower = NA, Upper = NA),testDf, deparse.level = 0)
-
-EC50SumFilterPlate[1,]
-
-dd <- 10
-
-rbind(1:4, c = 2, "a++" = 10, dd, deparse.level = 0)
-
-data.frame(row.names = sprintf("@NoEC50 %s", straiName), EC50 = sprintf(">%d", 30), StdErr = NA,
-           Lower = NA, Upper = NA)
-
-sprintf("@NoEC50 %s", "MIIC-14-01")

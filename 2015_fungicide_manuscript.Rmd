@@ -58,7 +58,6 @@ fullPlateData <- plyr::ldply(listPlate, data.frame)
 fullPlateData$Strain <- trim(fullPlateData$Strain)
 
 # change other wrong names
-fullPlateData$Strain[fullPlateData$Strain == "VB1"]      <- "VB-1"
 fullPlateData$Strain[fullPlateData$Strain == "Mont1_GH"] <- "Mont1"
 
 # change to factors for different sets of run
@@ -175,10 +174,7 @@ par(mfrow = c(1,2))
 # good fit strains
 selStrain2 <- c("12@KSSH_A2","12@MIVB_A5")
 selStrain2Data <- fullPlateData[fullPlateData$setStrain %in% selStrain2,]
-selStrain2Data$diameter2 <- with(selStrain2Data, 2*sqrt(Area2/3.1415926))
-selStrain2Data$diameter1 <- with(selStrain2Data, 2*sqrt(Area1/3.1415926))
-selStrain2Data$diameterR <- with(selStrain2Data,(diameter2-diameter1)/14)
-selStrain2Model <- drm(diameterR~Conc,
+selStrain2Model <- drm(growthRate~Conc,
                   format(Strain,trim=TRUE),
                   fct=LL.4(names=c("slope","Lower","Upper","EC50")),
                   data=selStrain2Data)
@@ -197,10 +193,7 @@ plot(selStrain2Model,type = "all",
 # bad fit strains
 selStrain1 <- c("MIBer_A5", "STJ3a")
 selStrain1Data <- fullPlateData[fullPlateData$Strain %in% selStrain1,]
-selStrain1Data$diameter2 <- with(selStrain1Data, 2*sqrt(Area2/3.1415926))
-selStrain1Data$diameter1 <- with(selStrain1Data, 2*sqrt(Area1/3.1415926))
-selStrain1Data$diameterR <- with(selStrain1Data,(diameter2-diameter1)/14)
-selStrain1Model <- drm(diameterR~Conc,
+selStrain1Model <- drm(growthRate~Conc,
                   format(Strain,trim=TRUE),
                   fct=LL.4(names=c("slope","Lower","Upper","EC50")),
                   data=selStrain1Data)
@@ -255,6 +248,16 @@ coniDataFormat$Conc <- as.numeric.factor(coniDataFormat$Conc)
 coniNoNaData <- na.exclude(coniDataFormat)
 coniNoNaData$setStrain <- with(coniNoNaData, paste(Isolate,Trial,sep="@"))
 coniNoNaData$setStrain <- as.factor(coniNoNaData$setStrain)
+
+# calculate relative germinate rate
+for (strain in fullPlateData$setStrain){
+  subData.1 <- fullPlateData[fullPlateData$setStrain == strain,]
+  # minConc <- min(as.numeric.factor(subData$Conc))
+  controlGrowthRate <- mean(subData.1$growthRate[subData.1$Conc == 0.0])
+  fullPlateData$relGrowthRate[fullPlateData$setStrain == strain] <- 
+    subData.1$growthRate / controlGrowthRate
+}
+
 ```
 
 ### 2) Calculate EC50 for conidia assay
@@ -376,7 +379,7 @@ ILStrainInfo <- read.csv("StrainInfoIL.csv", header = TRUE )
 ILStrainInfoSub <- subset(ILStrainInfo,
                           select = c("IsolateID", "State", "County", "year"))
 colnames(ILStrainInfoSub) <- c("isolate","state","county","year")
-strainInfoAll <- rbind(ILStrainInfoSub, MIStrainInfoSub)
+strainInfoAll <- rbind(ILStrainInfoSub[1:53,], MIStrainInfoSub)
 
 EC50SumFilterPlate$strainName <- do.call(str_replace_all, 
                                  list(EC50SumFilterPlate$Strain, "_", "-"))
@@ -388,29 +391,12 @@ EC50SumPlateGeoYear <- merge(EC50SumFilterPlate, strainInfoAll,
 EC50SumConidiaGeoYear <- merge(EC50SumFilterConidia, ILStrainInfoSub, 
                                by.x = "strainName", by.y = "isolate")
 
+ggplot(data = EC50SumPlateGeoYear, aes(x = state, y = EC50)) +
+  geom_boxplot() + geom_jitter(height = 0)
+
+ggplot(data = EC50SumConidiaGeoYear, aes(x = state, y = EC50)) +
+  geom_boxplot() + geom_jitter(height = 0)
+
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
