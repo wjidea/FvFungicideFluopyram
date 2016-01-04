@@ -31,6 +31,7 @@ library("ggplot2")
 library("dplyr")
 library("stringr")
 library("beeswarm")
+library("latticeExtra")
 
 # Customized functions
 
@@ -81,11 +82,22 @@ for (strain in fullPlateData$setStrain){
     subData.1$growthRate / controlGrowthRate
 }
 
+# detect how many strain that dont have a EC50
+# strain growth inhibution less than 50% at the highest fungicide concentration
+counter1 <- 0
+strainNoEc50 <- c()
+for (strain in levels(fullPlateData$setStrain)) {
+  if (all(fullPlateData$relGrowthRate[fullPlateData$setStrain == strain] > 0.5)){
+    counter1 <- counter1 + 1
+    strainNoEc50 <- c(strainNoEc50, strain)
+    #cat(paste(counter1,strain,"\n"))
+  }
+}
 
 ```
 
 ### 3) Calculate EC50 for poison plate assay
-```{r plate EC50, results = "hide", warning = FALSE, echo = FALSE}
+```{r plate EC50, results = "hide", warning = FALSE, echo = FALSE, cache=TRUE}
 # calculate EC50 for each of the strainSet
 write2File <- FALSE # write to file?
 if (file.exists("./Data/EC50_diameter_diamR.txt") & write2File){
@@ -147,6 +159,15 @@ rm(EC50Sum, EC50Raw, strainSplitList, ED_table, ED_table_p, subData)
 ## 4, Results
 
 ### 1) Statistics
+
+```{r plate assay statistics}
+
+
+
+```
+
+
+
 ### 2) Figures
 
 ####Figure 1 EC50 histogram
@@ -250,12 +271,12 @@ coniNoNaData$setStrain <- with(coniNoNaData, paste(Isolate,Trial,sep="@"))
 coniNoNaData$setStrain <- as.factor(coniNoNaData$setStrain)
 
 # calculate relative germinate rate
-for (strain in fullPlateData$setStrain){
-  subData.1 <- fullPlateData[fullPlateData$setStrain == strain,]
+for (strain in coniNoNaData$setStrain){
+  subData.2 <- coniNoNaData[coniNoNaData$setStrain == strain,]
   # minConc <- min(as.numeric.factor(subData$Conc))
-  controlGrowthRate <- mean(subData.1$growthRate[subData.1$Conc == 0.0])
-  fullPlateData$relGrowthRate[fullPlateData$setStrain == strain] <- 
-    subData.1$growthRate / controlGrowthRate
+  controlGrowthRate <- mean(subData.2$germinate[subData.2$Conc == 0.0])
+  coniNoNaData$relGerminate[coniNoNaData$setStrain == strain] <- 
+    subData.2$germinate / controlGrowthRate
 }
 
 ```
@@ -301,6 +322,7 @@ EC50Sum <- na.exclude(EC50Sum)
 
 # need to filter non-significant EC50 estimations for the EC50 dataframe
 # level of significance: alpha = 0.05
+length(EC50Sum$pvalue)
 EC50SumFilterConidia <- EC50Sum[EC50Sum$pvalue <= 0.05,]
 
 # clean up environment and remove no longer needed objects
@@ -344,32 +366,12 @@ plot(selStrain2Model,type = "all", broken = TRUE, col = TRUE, cex.legend = 0.9,
      # legendPos = c(20,0.04))
      #ylim = c(0,0.14))
 
-# bad fit strains
-# selStrain1 <- c("MIBer_A5", "STJ_3a")
-# selStrain1Data <- fullPlateData[fullPlateData$Strain %in% selStrain1,]
-# selStrain1Data$diameter2 <- with(selStrain1Data, 2*sqrt(Area2/3.1415926))
-# selStrain1Data$diameter1 <- with(selStrain1Data, 2*sqrt(Area1/3.1415926))
-# selStrain1Data$diameterR <- with(selStrain1Data,(diameter2-diameter1)/14)
-# selStrain1Model <- drm(diameterR~Conc,
-#                   format(Strain,trim=TRUE),
-#                   fct=LL.4(names=c("slope","Lower","Upper","EC50")),
-#                   data=selStrain1Data)
-# plot(selStrain1Model,type = "all",
-#      broken = TRUE,
-#      col = TRUE,
-#      cex.legend = 0.9,
-#      xlab = expression('Log10 Transformed Fluopyram EC'[50]*' (mg/L)'),
-#      ylab = "Mycelial Growth Rate (cm/d)",
-#      cex.axis = 1,
-#      main = "Hormetic effect",
-#      legendPos = c(95,0.14),
-#      ylim = c(0,0.14))
-
 rm(selStrain1, selStrain2, selStrain1Data, selStrain2Data)
 rm(selStrain1Model,selStrain2Model)
 ```
 
-```{r Figure 3 EC50 distribution based on state}
+####Figure 3
+```{r Figure 3 EC50 distribution based on state, echo=FALSE}
 # import demographic data for MI and IL experiment
 setwd(dataPath)
 MIStrainInfo <- read.csv("StrainInfoMI.csv", header = TRUE )
@@ -398,5 +400,96 @@ ggplot(data = EC50SumConidiaGeoYear, aes(x = state, y = EC50)) +
   geom_boxplot() + geom_jitter(height = 0)
 
 ```
+
+
+####Figure 4
+```{r Figure 4 compare two methods, echo=FALSE}
+
+# correct strain name
+EC50SumConidiaGeoYear$strainName[EC50SumConidiaGeoYear$strainName == "Mont-1"] <- "Mont1"
+# merge two EC50 df
+plateEC50Simple <- select(EC50SumPlateGeoYear, strainName, EC50, StdErr, 
+                          Lower, Upper) %>% rename(plateEC50 = EC50)
+conidiaEC50Simple <- select(EC50SumConidiaGeoYear, strainName, EC50, StdErr, 
+                          Lower, Upper) %>% rename(conidiaEC50 = EC50)
+# find duplicated run strain names
+dupNamePlate <- unique(
+  plateEC50Simple$strainName[duplicated(plateEC50Simple$strainName)]
+  )
+dupNameConidia <- unique(
+  conidiaEC50Simple$strainName[duplicated(conidiaEC50Simple$strainName)]
+  )
+# find unique run strain names
+plateEC50SimpleUniq <- 
+  plateEC50Simple[!plateEC50Simple$strainName %in% dupNamePlate,]
+conidiaEC50SimpleUniq <- 
+  conidiaEC50Simple[!conidiaEC50Simple$strainName %in% dupNameConidia,]
+
+# calculate mean, stderr, Lower and Upper for duplicated strain
+plateEC50SimpleDupl  <- 
+  plateEC50Simple[plateEC50Simple$strainName %in% dupNamePlate,] %>% 
+  group_by(strainName) %>% 
+  summarise(plateECMean = mean(plateEC50), 
+            StdErr = sd(plateEC50) / sqrt(length(plateEC50)),
+            Lower = plateECMean - StdErr,
+            Upper = plateECMean + StdErr) %>%
+  rename(plateEC50 = plateECMean)
+
+conidiaEC50SimpleDupl <- 
+  conidiaEC50Simple[conidiaEC50Simple$strainName %in% dupNameConidia,] %>% 
+  group_by(strainName) %>% 
+  summarise(conidiaECMean = mean(conidiaEC50), 
+            StdErr = sd(conidiaEC50) / sqrt(length(conidiaEC50)),
+            Lower = conidiaECMean - StdErr,
+            Upper = conidiaECMean + StdErr) %>%
+  rename(conidiaEC50 = conidiaECMean)
+
+plateEC50 <- rbind(plateEC50SimpleUniq, plateEC50SimpleDupl) %>%
+  rename(pEC50 = plateEC50, pSE = StdErr, pL = Lower, pU = Upper)
+conidiaEC50 <- rbind(conidiaEC50SimpleUniq, conidiaEC50SimpleDupl) %>%
+  rename(cEC50 = conidiaEC50, cSE = StdErr, cL = Lower, cU = Upper)
+
+# relabel row names
+rownames(plateEC50) <- 1:length(rownames(plateEC50))
+rownames(conidiaEC50) <- 1:length(rownames(conidiaEC50))
+
+compStrainsNames <- merge(plateEC50, conidiaEC50, by = "strainName")$strainName
+compPdata <- plateEC50[plateEC50$strainName %in% compStrainsNames, ]
+compPdata$assay <- "plate"
+colnames(compPdata) <- c("strainName", "EC50", "SE", "Lower", "Upper", "assay")
+compCdata <- conidiaEC50[conidiaEC50$strainName %in% compStrainsNames,]
+compCdata$assay <- "conidia"
+colnames(compCdata) <- c("strainName", "EC50", "SE", "Lower", "Upper", "assay")
+compData <- rbind(compPdata, compCdata)
+
+# ggplot(compData, aes(x = strainName, y = EC50, fill=assay)) +
+#   geom_bar(aes(fill = assay), stat="identity", 
+#            position = position_dodge(width = 0.9)) +
+#   geom_errorbar(aes(ymax = EC50 + SE, ymin=EC50 - SE), 
+#                 position = position_dodge(width = 0.9), width=0.25) +
+#   scale_fill_grey(start = 0.4, end = 0.7) +
+#   theme_classic() + labs(x = "Strain names", y = "EC50 estimates (µg/mL)") +
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+xyPlConiData <- merge(plateEC50, conidiaEC50, by = "strainName")
+xyPlConiData$PLdiff <- with(xyPlConiData, pEC50 - cEC50)
+xyPlConiData$PLdiffU <- with(xyPlConiData, pU - cU)
+xyPlConiData$PLdiffL <- with(xyPlConiData, pL - cL)
+
+
+
+update(segplot(reorder(strainName, PLdiff) ~ PLdiffL + PLdiffU, data = xyPlConiData, 
+        centers = PLdiff, draw.bands = FALSE, 
+        #xlab = "Difference between plate and conidia assay EC50 estimate (µg/mL)",
+        xlab = expression('Poison plate EC'[50]*' - Conidia assay EC'[50] * ' (µg/mL)'),
+        ylab = "Strains") +
+  layer(panel.ablineq(v=0, label = NULL, col.line = "grey", x = -0.6, y = 20)))
+
+
+```
+
+
+
+
 
 
