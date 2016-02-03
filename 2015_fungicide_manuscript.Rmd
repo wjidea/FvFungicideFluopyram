@@ -41,7 +41,7 @@ trim <- function (x) gsub("^\\s+|\\s+$", "", x)
 # convert factors to numeric and suppose to be an efficient way
 as.numeric.factor <- function(x) {as.numeric(levels(x))[x]}
 
-# def se
+# calculate standard err
 se <- function(x) sd(x)/sqrt(length(x))
 # se(c(1,2,3,4))
 ```
@@ -98,7 +98,7 @@ for (strain in levels(fullPlateData$setStrain)) {
     #cat(paste(counter1,strain,"\n"))
   }
 }
-strainNoEc50Data <- fullPlateData[fullPlateData$setStrain %in% strainNoEc50,]
+fullPlateDataExclude50 <- fullPlateData[!fullPlateData$setStrain %in% strainNoEc50,]
 ```
 
 ### 3) Calculate EC50 for poison plate assay
@@ -115,10 +115,10 @@ EC50Raw <- data.frame(straiName = character(0), EC50 = numeric(0),
 
 # loop through all individual set-Strain names and
 # calculate EC50 values seprately
-for (strainSet in levels(fullPlateData$setStrain) ){
+for (strainSet in levels(factor(fullPlateDataExclude50$setStrain)) ){
   # subset data by strain set
-  subData <- subset(fullPlateData, 
-                    subset = fullPlateData$setStrain == strainSet)
+  subData <- subset(fullPlateDataExclude50, 
+                    subset = fullPlateDataExclude50$setStrain == strainSet)
   subData.m1 <- drm(growthRate ~ Conc, 
                     format(setStrain, trim=TRUE),
                     fct=LL.4(names=c("slope",
@@ -316,7 +316,7 @@ for (strain in levels(coniNoNaData$setStrain)) {
     #cat(paste(counter1,strain,"\n"))
   }
 }
-
+coniNoNaDataExclude50 <- coniNoNaData[!coniNoNaData$setStrain %in% strainNoEc50_conidia,]
 ```
 
 ### 1) Calculate EC50 for conidia assay
@@ -328,10 +328,10 @@ EC50Raw <- data.frame(straiName = character(0), EC50 = numeric(0),
 
 # loop through all individual set-Strain names and
 # calculate EC50 values seprately
-for (strainSet in levels(coniNoNaData$setStrain) ){
+for (strainSet in levels(factor(coniNoNaDataExclude50$setStrain)) ){
   # subset data by strain set
-  subData <- subset(coniNoNaData, 
-                    subset = coniNoNaData$setStrain == strainSet)
+  subData <- subset(coniNoNaDataExclude50, 
+                    subset = coniNoNaDataExclude50$setStrain == strainSet)
   subData.m1 <- drm(germinate ~ Conc, 
                     format(setStrain, trim=TRUE),
                     fct=LL.4(names=c("slope",
@@ -567,7 +567,7 @@ abline(lm(pEC50~cEC50, data=xyPlConiData))
 # Lines <- list(bquote(expression(italic("y = 2.553 + 0.357x"))),bquote("Spearman Correlation p = 0.4"))
 # mtext(do.call(expression, Lines),side=3,line=1:0)
 
-text(x=3.5, y=3, cex=0.8, label = expression(atop(italic("y = 2.553 + 0.357x"),
+text(x=3.5, y=3, cex=0.8, label = expression(atop(italic("y = 2.553 + 0.369x"),
                                          "Spearman correlation p = 0.4")))
 # lm(pEC50~cEC50, data=xyPlConiData)
 cor.test(xyPlConiData$pEC50,xyPlConiData$cEC50, method="spearman")
@@ -576,7 +576,7 @@ cor.test(xyPlConiData$pEC50,xyPlConiData$cEC50, method="spearman")
 
 #### Stats
 
-```{r}
+```{r Tables S1 S2 S3}
 
 EC50PlateSum$Strain <- do.call(str_replace_all, 
                                  list(EC50PlateSum$strainName, "_", "-"))
@@ -603,6 +603,32 @@ kable(EC50PlateTable,
 kable(EC50ConidialTable, 
       caption = "TableS2 EC50 estimation using conidial germination \
       growth inhibition assay")
+
+
+# the code I worte below was to generate a table with
+# the strains that dont have a absolute EC50. In other words,
+# the isolates growth inhibition were higher than 50% even
+# at the highest fungicide concentration
+
+plateNoEC50 <- matrix(unlist(strsplit(strainNoEc50,"@")), ncol = 2,
+                             byrow = TRUE)[,2]
+plateNoEC50 <- unique(plateNoEC50)
+repStrainData <- fullPlateDataExclude50[fullPlateDataExclude50$Strain %in% plateNoEC50,]
+repStrainNameList <- levels(factor(repStrainData$Strain))
+plateNoEC50TableNames <- plateNoEC50[!plateNoEC50 %in% repStrainNameList]
+plateNoEC50_replace <- do.call(str_replace_all, list(plateNoEC50TableNames, "_", "-"))
+noEC50Table <- strainInfoAll[strainInfoAll$isolate %in% plateNoEC50_replace,,drop=TRUE]
+# strainNoEc50_conidia -> 13Fv190
+noEC50Table$assay <- "plate"
+noEC50TableConidia <- ILStrainInfoSub[ILStrainInfoSub$isolate %in% "13Fv190",]
+noEC50TableConidia$assay <- "conidia"
+noEC50Table <- rbind(noEC50Table, noEC50TableConidia)
+noEC50Table <- noEC50Table %>% rename(Strain = isolate, State = state, 
+                                      County = county, Year = year, Assay = assay)
+rownames(noEC50Table) <- 1:dim(noEC50Table)[1]
+kable(noEC50Table,
+      caption = "TableS3 strains were less sensitivity at the highest concentrated\
+      fluopyram media in both poison plate assay and conidia germination assay")
 
 ```
 

@@ -232,5 +232,7 @@ modelFit(selStrain2Model)
 coef(selStrain2Model) 
 
 
-
-
+#####
+a <- factor(c(1,2,3,4,5))
+levels(a)
+levels(factor(a[1:3]))
