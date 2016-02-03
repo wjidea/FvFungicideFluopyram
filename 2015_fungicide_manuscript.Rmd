@@ -30,15 +30,20 @@ library("drc")
 library("ggplot2")
 library("dplyr")
 library("stringr")
-library("beeswarm")
+# library("beeswarm")
 library("latticeExtra")
+library("knitr")
 
 # Customized functions
-
 # trim leading and trailling space, "|" is a boolean "OR"
 trim <- function (x) gsub("^\\s+|\\s+$", "", x)
+
 # convert factors to numeric and suppose to be an efficient way
 as.numeric.factor <- function(x) {as.numeric(levels(x))[x]}
+
+# def se
+se <- function(x) sd(x)/sqrt(length(x))
+# se(c(1,2,3,4))
 ```
 
 ### 2) import data and manipulations
@@ -71,7 +76,7 @@ fullPlateData$setStrain <- factor(fullPlateData$setStrain)
 
 # calculate colony growth rate
 fullPlateData$growthRate <- (sqrt(fullPlateData$Area2/pi) - 
-                               sqrt(fullPlateData$Area1/pi))/10
+                               sqrt(fullPlateData$Area1/pi))/7
 
 # calculate relative growth rate compare to 0 control group
 for (strain in fullPlateData$setStrain){
@@ -93,7 +98,7 @@ for (strain in levels(fullPlateData$setStrain)) {
     #cat(paste(counter1,strain,"\n"))
   }
 }
-
+strainNoEc50Data <- fullPlateData[fullPlateData$setStrain %in% strainNoEc50,]
 ```
 
 ### 3) Calculate EC50 for poison plate assay
@@ -152,16 +157,37 @@ EC50SumFilterPlate <- EC50Sum[EC50Sum$pvalue <= 0.05,]
 rm(subData.m1, strainSet, listPlate, ModelSummary, write2File, fileList)
 rm(EC50Sum, EC50Raw, strainSplitList, ED_table, ED_table_p, subData)
 
+# summarize the data into one strain one value
+# create empty list with colNames
+EC50PlateSum <- data.frame(strainName = character(0), EC50 = numeric(0), 
+                              Lower = numeric(0),Upper = numeric(0),
+                              StdErr = numeric(0))
+
+for (strainName in sort(levels(factor(EC50SumFilterPlate$Strain)))){
+  subDataPlate <- EC50SumFilterPlate[EC50SumFilterPlate$Strain == strainName,]
+  tempEC50 <- mean(subDataPlate$EC50)
+  if (dim(subDataPlate)[1] > 2){
+    lowerEC50 <- tempEC50 - se(subDataPlate$EC50)
+    upperEC50 <- tempEC50 + se(subDataPlate$EC50)
+    seEC50    <- mean(subDataPlate$StdErr)
+  } else {
+    lowerEC50 <- min(subDataPlate$Lower)
+    upperEC50 <- max(subDataPlate$Upper)
+    seEC50    <- mean(subDataPlate$StdErr)
+  }
+  newDf <- data.frame(strainName = strainName, EC50 = tempEC50, 
+                      Lower = lowerEC50,Upper = upperEC50,
+                      StdErr = seEC50)
+  EC50PlateSum <- rbind(EC50PlateSum, newDf)
+}
+
 ```
-
-
 
 ## 4, Results
 
 ### 1) Statistics
 
 ```{r plate assay statistics}
-
 
 
 ```
@@ -172,14 +198,15 @@ rm(EC50Sum, EC50Raw, strainSplitList, ED_table, ED_table_p, subData)
 
 ####Figure 1 EC50 histogram
 ```{r Histogram EC50 distrubnution (plate), echo=FALSE}
-ggplot(EC50SumFilterPlate, aes(x=EC50)) + 
+ggplot(EC50PlateSum, aes(x=EC50)) + 
   geom_histogram(aes(y=(..count..)),
                  # stat = "identity",
                  binwidth=.5, 
                  colour="dark green", fill="white",size=0.9) +
   geom_vline(aes(xintercept=mean(EC50, na.rm=T)),colour="red", 
              linetype="dashed", size=1) + theme_grey() + geom_rug() + 
-  scale_x_continuous(breaks=0:10) + 
+  scale_x_continuous(breaks=0:12, limits = c(0,10)) + 
+  scale_y_continuous(breaks=c(0,5,10,15,20,25,30)) + 
   labs(y="Frequency", x=expression('Fluopyram EC'[50]*' (mg/L)')) +
   theme_classic() +
   theme(axis.text   = element_text(size=14), 
@@ -237,7 +264,6 @@ rm(selStrain1Model,selStrain2Model)
 ```{r plate method validation, echo=FALSE}
 
 
-
 ```
 
 ### 3) Other comments
@@ -246,6 +272,8 @@ rm(selStrain1Model,selStrain2Model)
 
 ```{r write table in file (plate), echo=FALSE}
 # write.csv2(EC50SumFilterPlate, file = "./Data/EC50SumPlate.csv",quote = FALSE)
+
+# List all the strains and their EC50 range
 
 
 
@@ -279,9 +307,19 @@ for (strain in coniNoNaData$setStrain){
     subData.2$germinate / controlGrowthRate
 }
 
+counter2 <- 0
+strainNoEc50_conidia <- c()
+for (strain in levels(coniNoNaData$setStrain)) {
+  if (all(coniNoNaData$relGerminate[coniNoNaData$setStrain == strain] > 0.5)){
+    counter2 <- counter1 + 1
+    strainNoEc50_conidia <- c(strainNoEc50_conidia, strain)
+    #cat(paste(counter1,strain,"\n"))
+  }
+}
+
 ```
 
-### 2) Calculate EC50 for conidia assay
+### 1) Calculate EC50 for conidia assay
 ```{r conida EC50, results = "hide", warning = FALSE, cache=TRUE, echo=FALSE}
 # create empty list with colNames
 EC50Raw <- data.frame(straiName = character(0), EC50 = numeric(0), 
@@ -322,29 +360,66 @@ EC50Sum <- na.exclude(EC50Sum)
 
 # need to filter non-significant EC50 estimations for the EC50 dataframe
 # level of significance: alpha = 0.05
-length(EC50Sum$pvalue)
+
 EC50SumFilterConidia <- EC50Sum[EC50Sum$pvalue <= 0.05,]
 
 # clean up environment and remove no longer needed objects
 rm(subData.m1, strainSet, ModelSummary)
 rm(EC50Sum, EC50Raw, strainSplitList, ED_table, ED_table_p, subData)
 
+# summarize the data into one strain one value
+# create empty list with colNames
+EC50ConidiaSum <- data.frame(strainName = character(0), EC50 = numeric(0), 
+                              Lower = numeric(0),Upper = numeric(0),
+                             StdErr = numeric(0))
+
+# if one strain was tested for multiple times,
+# it needs to be collapsed into 
+for (strainName in sort(levels(factor(EC50SumFilterConidia$Strain)))){
+  subDataConidia <- EC50SumFilterConidia[EC50SumFilterConidia$Strain == strainName,]
+  tempEC50 <- mean(subDataConidia$EC50)
+  if (dim(subDataConidia)[1] > 2){
+    lowerEC50 <- tempEC50 - se(subDataConidia$EC50)
+    upperEC50 <- tempEC50 + se(subDataConidia$EC50)
+    seEC50    <- mean(subDataConidia$StdErr)
+  }
+  else{
+    lowerEC50 <- min(subDataConidia$Lower)
+    upperEC50 <- max(subDataConidia$Upper)
+    seEC50    <- mean(subDataConidia$StdErr)
+  }
+  newDf <- data.frame(strainName = strainName, EC50 = tempEC50, 
+                      Lower = lowerEC50,Upper = upperEC50,
+                      StdErr = seEC50)
+  EC50ConidiaSum <- rbind(EC50ConidiaSum, newDf)
+}
+```
+
+
+### 2) Statistics
+
+```{r conidia assay statistics}
+
+
 ```
 
 ####Figure 1 EC50 histogram (conidia)
 ```{r Histogram EC50 distrubnution (conida), echo=FALSE}
-ggplot(EC50SumFilterConidia, aes(x=EC50)) + 
-  geom_histogram(aes(y=(..count..)),binwidth=.5, 
-                 colour="dark green", fill="white",size=0.9) +
+ggplot(EC50ConidiaSum, aes(x=EC50)) + 
+  geom_histogram(aes(y=(..count..)),
+                 binwidth=.5, 
+                 colour="dark green",
+                 fill="white",size=0.9) +
   geom_vline(aes(xintercept=mean(EC50, na.rm=T)),colour="red", 
              linetype="dashed", size=1) + theme_grey() + geom_rug() + 
-  scale_x_continuous(breaks=0:12) + 
+  scale_x_continuous(breaks=0:12, limits = c(0,10)) + 
+  scale_y_continuous(breaks=c(0,5,10,15,20,25,30)) + 
   labs(y="Frequency", x=expression('Fluopyram EC'[50]*' (mg/L)')) +
   theme_classic()+
-  theme(axis.text = element_text(size=14), 
-        axis.title = element_text(size=16),
-        axis.text.x=element_text(colour="black"), 
-        axis.text.y=element_text(colour="black")) 
+  theme(axis.text   = element_text(size=14), 
+        axis.title  = element_text(size=16),
+        axis.text.x = element_text(colour="black"), 
+        axis.text.y = element_text(colour="black")) 
 ```
 
 
@@ -381,7 +456,8 @@ ILStrainInfo <- read.csv("StrainInfoIL.csv", header = TRUE )
 ILStrainInfoSub <- subset(ILStrainInfo,
                           select = c("IsolateID", "State", "County", "year"))
 colnames(ILStrainInfoSub) <- c("isolate","state","county","year")
-strainInfoAll <- rbind(ILStrainInfoSub[1:53,], MIStrainInfoSub)
+MIStrainInfoSub <- MIStrainInfoSub[!MIStrainInfoSub$isolate == "13Fv163",]
+strainInfoAll <- rbind(ILStrainInfoSub[2:53,], MIStrainInfoSub)
 
 EC50SumFilterPlate$strainName <- do.call(str_replace_all, 
                                  list(EC50SumFilterPlate$Strain, "_", "-"))
@@ -403,7 +479,7 @@ ggplot(data = EC50SumConidiaGeoYear, aes(x = state, y = EC50)) +
 
 
 ####Figure 4
-```{r Figure 4 compare two methods, echo=FALSE}
+```{r Figure 4 compare two methods, echo=FALSE, fig.width=6}
 
 # correct strain name
 EC50SumConidiaGeoYear$strainName[EC50SumConidiaGeoYear$strainName == "Mont-1"] <- "Mont1"
@@ -485,11 +561,49 @@ update(segplot(reorder(strainName, PLdiff) ~ PLdiffL + PLdiffU, data = xyPlConiD
         ylab = "Strains") +
   layer(panel.ablineq(v=0, label = NULL, col.line = "grey", x = -0.6, y = 20)))
 
+plot(pEC50~cEC50, data=xyPlConiData, xlab=expression('Conidia assay EC'[50]),
+     ylab=expression('Plate assay EC'[50]))
+abline(lm(pEC50~cEC50, data=xyPlConiData))
+# Lines <- list(bquote(expression(italic("y = 2.553 + 0.357x"))),bquote("Spearman Correlation p = 0.4"))
+# mtext(do.call(expression, Lines),side=3,line=1:0)
 
+text(x=3.5, y=3, cex=0.8, label = expression(atop(italic("y = 2.553 + 0.357x"),
+                                         "Spearman correlation p = 0.4")))
+# lm(pEC50~cEC50, data=xyPlConiData)
+cor.test(xyPlConiData$pEC50,xyPlConiData$cEC50, method="spearman")
 ```
 
 
+#### Stats
 
+```{r}
 
+EC50PlateSum$Strain <- do.call(str_replace_all, 
+                                 list(EC50PlateSum$strainName, "_", "-"))
+EC50ConidiaSum$Strain <- do.call(str_replace_all, 
+                                 list(EC50ConidiaSum$strainName, "_", "-"))
+
+EC50PlateTable <- merge(EC50PlateSum, strainInfoAll, 
+                             by.x = "Strain", by.y = "isolate") %>%
+                  select(Strain, state, county, year, EC50, 
+                         StdErr, Lower, Upper) %>%
+                  rename(State=state, County=county, Year=year)
+EC50ConidialTable <- merge(EC50ConidiaSum, ILStrainInfoSub, 
+                               by.x = "Strain", by.y = "isolate") %>%
+                  select(Strain, state, county, year, EC50, 
+                         StdErr, Lower, Upper) %>%
+                  rename(State=state, County=county, Year=year)
+
+# EC50PlateTable$Strain[duplicated(EC50PlateTable$Strain)]
+# EC50ConidialTable$Strain[duplicated(EC50ConidialTable$Strain)]
+
+kable(EC50PlateTable, 
+      caption = "TableS1 EC50 estimation using poison plate mycelial \
+      growth inhibition assay")
+kable(EC50ConidialTable, 
+      caption = "TableS2 EC50 estimation using conidial germination \
+      growth inhibition assay")
+
+```
 
 

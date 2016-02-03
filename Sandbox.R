@@ -1,3 +1,42 @@
+# unused code
+
+# find duplicated run strain names
+dupNamePlate <- unique(
+  plateEC50Simple$Strain[duplicated(plateEC50Simple$Strain)]
+)
+dupNameConidia <- unique(
+  conidiaEC50Simple$Strain[duplicated(conidiaEC50Simple$Strain)]
+)
+# find unique run strain names
+plateEC50SimpleUniq <- 
+  plateEC50Simple[!plateEC50Simple$Strain %in% dupNamePlate,]
+conidiaEC50SimpleUniq <- 
+  conidiaEC50Simple[!conidiaEC50Simple$Strain %in% dupNameConidia,]
+
+# calculate mean, stderr, Lower and Upper for duplicated strain
+plateEC50SimpleDupl  <- 
+  plateEC50Simple[plateEC50Simple$Strain %in% dupNamePlate,] %>% 
+  group_by(Strain) %>% 
+  summarise(plateECMean = mean(plateEC50), 
+            StdErr = sd(plateEC50) / sqrt(length(plateEC50)),
+            Lower = plateECMean - StdErr,
+            Upper = plateECMean + StdErr) %>%
+  rename(plateEC50 = plateECMean)
+
+conidiaEC50SimpleDupl <- 
+  conidiaEC50Simple[conidiaEC50Simple$Strain %in% dupNameConidia,] %>% 
+  group_by(Strain) %>% 
+  summarise(conidiaECMean = mean(conidiaEC50), 
+            StdErr = sd(conidiaEC50) / sqrt(length(conidiaEC50)),
+            Lower = conidiaECMean - StdErr,
+            Upper = conidiaECMean + StdErr) %>%
+  rename(conidiaEC50 = conidiaECMean)
+
+
+
+
+
+###########
 as.numeric(levels(coniDataFormat$Conc))[coniDataFormat$Conc]
 
 TestData <- subset(fullPlateData, subset = fullPlateData$setStrain == "9@VB-1")
@@ -112,29 +151,85 @@ ggplot(compData, aes(x = strainName, y = EC50, fill=assay)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
+# bad fit strain with BC model
+selStrain1 <- c("MIBer_A5", "STJ3a")
+selStrain2 <- c("MIBer_A5")
+selStrain1Data <- fullPlateData[fullPlateData$Strain %in% selStrain1,]
+selStrain1Model <- drm(growthRate~Conc,
+                       format(Strain,trim=TRUE),
+                       fct=LL.4(names=c("slope","Lower","Upper","EC50")),
+                       data=selStrain1Data)
+plot(selStrain1Model,type = "all",
+     broken = TRUE,
+     col = TRUE,
+     cex.legend = 0.9,
+     xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
+     ylab = "Mycelial Growth Rate (cm/d)",
+     cex.axis = 1,
+     main = "Hormetic effect")
+
+selStrain1.m0 <- drm(growthRate~Conc,
+                     format(Strain,trim=TRUE), 
+                     fct=LL.3(),
+                     data=selStrain1Data)
+selStrain1.m1 <- drm(growthRate~Conc,
+                       format(Strain,trim=TRUE),
+                       fct=LL.4(names=c("slope","Lower","Upper","EC50")),
+                       data=selStrain1Data)
+selStrain1.m2 <- drm(growthRate~Conc,
+                     format(Strain,trim=TRUE),
+                     fct=LL.5(),
+                     data=selStrain1Data)
+selStrain1.m3 <- drm(growthRate~Conc,
+                     format(Strain,trim=TRUE), fct=CRS.4c(),
+                     data=selStrain1Data)
+selStrain1.m4 <- drm(growthRate~Conc,
+                     format(Strain,trim=TRUE), fct=BC.4(),
+                     data=selStrain1Data)
+selStrain1.m5 <- drm(growthRate~Conc,
+                     format(Strain,trim=TRUE), fct=W1.4(),
+                     data=selStrain1Data)
+selStrain1.m6 <- drm(growthRate~Conc,
+                     format(Strain,trim=TRUE), fct=W2.4(),
+                     data=selStrain1Data)
+anova(selStrain1.m4, selStrain1.m1)
+modelFit(selStrain1.m4)
+
+plot(selStrain1.m4)
+plot(selStrain1.m1,add = TRUE, col="Red")
+
+plot(selStrain1.m3,type = "all",
+     broken = TRUE,
+     col = TRUE,
+     cex.legend = 0.9,
+     xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
+     ylab = "Mycelial Growth Rate (cm/d)",
+     cex.axis = 1)
+
+modelRSS <- c(m0=modelFit(selStrain1.m0)[2,2],m1=modelFit(selStrain1.m1)[2,2],
+m2=modelFit(selStrain1.m2)[2,2], m3=modelFit(selStrain1.m3)[2,2],
+m4=modelFit(selStrain1.m4)[2,2], m5=modelFit(selStrain1.m5)[2,2],
+m6=modelFit(selStrain1.m6)[2,2])
+sort(modelRSS)
+
+ED(selStrain1.m1,50)
+ED(selStrain1.m4,50)
+
+mselect(selStrain1.mTest, list(LL.3(), LL.5(), W1.4(), W2.4(), CRS.4c(), BC.4()))
+
+selStrain1.mTest <- drm(growthRate~Conc,format(Strain,trim=TRUE),
+                     data=selStrain1Data, fct = LL.4())
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+selStrain2 <- c("12@KSSH_A2","12@MIVB_A5")
+selStrain2Data <- fullPlateData[fullPlateData$setStrain %in% selStrain2,]
+selStrain2Model <- drm(growthRate~Conc,
+                       format(Strain,trim=TRUE),
+                       fct=LL.4(names=c("slope","Lower","Upper","EC50")),
+                       data=selStrain2Data)
+modelFit(selStrain2Model)
+coef(selStrain2Model) 
 
 
 
