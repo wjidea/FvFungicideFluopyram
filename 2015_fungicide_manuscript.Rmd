@@ -424,10 +424,10 @@ ggplot(EC50ConidiaSum, aes(x=EC50)) +
 
 
 ####Figure 2 Growth curve fit (conidia)
-```{r growth curve fit (conidia), echo=FALSE, fig.width=10, warning=FALSE}
+```{r growth curve fit (conidia), echo=FALSE, fig.width=5.5, warning=FALSE}
 par(mfrow = c(1,1))
 # good fit strains
-selStrain2 <- c("13Fv171@3","13Fv180@3","13Fv188@10")
+selStrain2 <- c("KSSH-A7@10","LE-11-1@10","LL0059@14")
 selStrain2Data <- coniNoNaData[coniNoNaData$setStrain %in% selStrain2,]
 selStrain2Model <- drm(germinate~Conc,
                   format(Isolate,trim=TRUE),
@@ -437,7 +437,7 @@ plot(selStrain2Model,type = "all", broken = TRUE, col = TRUE, cex.legend = 0.9,
      #level=selStrain2,
      xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
      ylab = "Germinated conidia", cex.axis = 1,
-     main = "Normal data fit", ylim = c(0, 50))
+     main = "Normal data fit", ylim = c(0, 50), xlim = c(0,20))
      # legendPos = c(20,0.04))
      #ylim = c(0,0.14))
 
@@ -446,7 +446,7 @@ rm(selStrain1Model,selStrain2Model)
 ```
 
 ####Figure 3
-```{r Figure 3 EC50 distribution based on state, echo=FALSE}
+```{r Figure 3 EC50 distribution based on state, echo=FALSE, fig.width=7}
 # import demographic data for MI and IL experiment
 setwd(dataPath)
 MIStrainInfo <- read.csv("StrainInfoMI.csv", header = TRUE )
@@ -574,7 +574,7 @@ cor.test(xyPlConiData$pEC50,xyPlConiData$cEC50, method="spearman")
 ```
 
 
-#### Stats
+#### Supplimental figures or tables
 
 ```{r Tables S1 S2 S3}
 
@@ -604,6 +604,28 @@ kable(EC50ConidialTable,
       caption = "TableS2 EC50 estimation using conidial germination \
       growth inhibition assay")
 
+#Table1 summarized table for strains assay plate assay
+sumPlateTable <- EC50PlateTable %>% group_by(State) %>% arrange(Year) %>%
+  #filter(!is.na(Year)) %>%
+  summarise(N = length(EC50),
+            Years = paste(first(Year),"-",last(Year)),
+            EC50Range = paste(round(min(EC50),2),"-", round(max(EC50),2))
+            )
+kable(sumPlateTable,
+      caption = "Table1 Geographical and year collection for the F. virguliforme\
+      isolates used in this study for the poison plate assay"
+      )
+
+#Table2 summarized table for strains assay conidial germination assay
+sumConidiaTable <- EC50ConidialTable %>% group_by(State) %>% arrange(Year) %>%
+  #filter(!is.na(Year)) %>%
+  summarise(N = length(EC50),
+            Years = paste(first(Year),"-",last(Year)),
+            EC50Range = paste(round(min(EC50),2),"-", round(max(EC50),2))
+            )
+kable(sumConidiaTable,
+      caption = "__Table 2.__ Geographical and year collection for the F. virguliforme\
+      isolates used in this study for the conidial germination assay")
 
 # the code I worte below was to generate a table with
 # the strains that dont have a absolute EC50. In other words,
@@ -632,4 +654,11 @@ kable(noEC50Table,
 
 ```
 
+
+```{r test reproducibility of the plate assay experiment}
+
+fullPlateData
+
+
+```
 
