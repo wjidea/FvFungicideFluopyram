@@ -33,6 +33,7 @@ library("stringr")
 # library("beeswarm")
 library("latticeExtra")
 library("knitr")
+library("gridExtra")
 
 # Customized functions
 # trim leading and trailling space, "|" is a boolean "OR"
@@ -183,108 +184,8 @@ for (strainName in sort(levels(factor(EC50SumFilterPlate$Strain)))){
 
 ```
 
-## 4, Results
 
-### 1) Statistics
-
-```{r plate assay statistics}
-
-
-```
-
-
-
-### 2) Figures
-
-####Figure 1 EC50 histogram
-```{r Histogram EC50 distrubnution (plate), echo=FALSE}
-ggplot(EC50PlateSum, aes(x=EC50)) + 
-  geom_histogram(aes(y=(..count..)),
-                 # stat = "identity",
-                 binwidth=.5, 
-                 colour="dark green", fill="white",size=0.9) +
-  geom_vline(aes(xintercept=mean(EC50, na.rm=T)),colour="red", 
-             linetype="dashed", size=1) + theme_grey() + geom_rug() + 
-  scale_x_continuous(breaks=0:12, limits = c(0,10)) + 
-  scale_y_continuous(breaks=c(0,5,10,15,20,25,30)) + 
-  labs(y="Frequency", x=expression('Fluopyram EC'[50]*' (mg/L)')) +
-  theme_classic() +
-  theme(axis.text   = element_text(size=14), 
-        axis.title  = element_text(size=16),
-        axis.text.x = element_text(colour="black"), 
-        axis.text.y = element_text(colour="black")) 
-```
-
-
-####Figure 2 Growth curve fit (Plate)
-```{r growth curve fit (plate), echo=FALSE, fig.width=10, warning=FALSE}
-par(mfrow = c(1,2))
-# good fit strains
-selStrain2 <- c("12@KSSH_A2","12@MIVB_A5")
-selStrain2Data <- fullPlateData[fullPlateData$setStrain %in% selStrain2,]
-selStrain2Model <- drm(growthRate~Conc,
-                  format(Strain,trim=TRUE),
-                  fct=LL.4(names=c("slope","Lower","Upper","EC50")),
-                  data=selStrain2Data)
-plot(selStrain2Model,type = "all",
-     broken = TRUE,
-     col = TRUE,
-     cex.legend = 0.9,
-     level=c("KSSH_A2","MIVB_A5"),
-     xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
-     ylab = "Mycelial Growth Rate (cm/d)",
-     cex.axis = 1,
-     main = "Normal data fit",
-     legendPos = c(95,0.14),
-     ylim = c(0,0.14))
-
-# bad fit strains
-selStrain1 <- c("MIBer_A5", "STJ3a")
-selStrain1Data <- fullPlateData[fullPlateData$Strain %in% selStrain1,]
-selStrain1Model <- drm(growthRate~Conc,
-                  format(Strain,trim=TRUE),
-                  fct=LL.4(names=c("slope","Lower","Upper","EC50")),
-                  data=selStrain1Data)
-plot(selStrain1Model,type = "all",
-     broken = TRUE,
-     col = TRUE,
-     cex.legend = 0.9,
-     xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
-     ylab = "Mycelial Growth Rate (cm/d)",
-     cex.axis = 1,
-     main = "Hormetic effect",
-     legendPos = c(95,0.14),
-     ylim = c(0,0.14))
-
-rm(selStrain1, selStrain2, selStrain1Data, selStrain2Data)
-rm(selStrain1Model,selStrain2Model)
-```
-
-####Figure 3 method validation
-```{r plate method validation, echo=FALSE}
-
-
-```
-
-### 3) Other comments
-
-## 5, Notes and comments
-
-```{r write table in file (plate), echo=FALSE}
-# write.csv2(EC50SumFilterPlate, file = "./Data/EC50SumPlate.csv",quote = FALSE)
-
-# List all the strains and their EC50 range
-
-
-
-```
-
-
-***
-
-#Part II Conidia Germination Assay
-
-## 1, Dependencies and data descriptions
+### 4) Calculate EC50 for poison plate assay
 ```{r import data conidia, echo = FALSE,  message = FALSE}
 # Prepare data path
 conidiaDataPath <- paste(dataPath,"/conidiaAssay.csv",sep="")
@@ -319,7 +220,7 @@ for (strain in levels(coniNoNaData$setStrain)) {
 coniNoNaDataExclude50 <- coniNoNaData[!coniNoNaData$setStrain %in% strainNoEc50_conidia,]
 ```
 
-### 1) Calculate EC50 for conidia assay
+### 5) Calculate EC50 for conidia assay
 ```{r conida EC50, results = "hide", warning = FALSE, cache=TRUE, echo=FALSE}
 # create empty list with colNames
 EC50Raw <- data.frame(straiName = character(0), EC50 = numeric(0), 
@@ -396,56 +297,7 @@ for (strainName in sort(levels(factor(EC50SumFilterConidia$Strain)))){
 ```
 
 
-### 2) Statistics
-
-```{r conidia assay statistics}
-
-
-```
-
-####Figure 1 EC50 histogram (conidia)
-```{r Histogram EC50 distrubnution (conida), echo=FALSE}
-ggplot(EC50ConidiaSum, aes(x=EC50)) + 
-  geom_histogram(aes(y=(..count..)),
-                 binwidth=.5, 
-                 colour="dark green",
-                 fill="white",size=0.9) +
-  geom_vline(aes(xintercept=mean(EC50, na.rm=T)),colour="red", 
-             linetype="dashed", size=1) + theme_grey() + geom_rug() + 
-  scale_x_continuous(breaks=0:12, limits = c(0,10)) + 
-  scale_y_continuous(breaks=c(0,5,10,15,20,25,30)) + 
-  labs(y="Frequency", x=expression('Fluopyram EC'[50]*' (mg/L)')) +
-  theme_classic()+
-  theme(axis.text   = element_text(size=14), 
-        axis.title  = element_text(size=16),
-        axis.text.x = element_text(colour="black"), 
-        axis.text.y = element_text(colour="black")) 
-```
-
-
-####Figure 2 Growth curve fit (conidia)
-```{r growth curve fit (conidia), echo=FALSE, fig.width=5.5, warning=FALSE}
-par(mfrow = c(1,1))
-# good fit strains
-selStrain2 <- c("KSSH-A7@10","LE-11-1@10","LL0059@14")
-selStrain2Data <- coniNoNaData[coniNoNaData$setStrain %in% selStrain2,]
-selStrain2Model <- drm(germinate~Conc,
-                  format(Isolate,trim=TRUE),
-                  fct=LL.4(names=c("slope","Lower","Upper","EC50")),
-                  data=selStrain2Data)
-plot(selStrain2Model,type = "all", broken = TRUE, col = TRUE, cex.legend = 0.9,
-     #level=selStrain2,
-     xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
-     ylab = "Germinated conidia", cex.axis = 1,
-     main = "Normal data fit", ylim = c(0, 50), xlim = c(0,20))
-     # legendPos = c(20,0.04))
-     #ylim = c(0,0.14))
-
-rm(selStrain1, selStrain2, selStrain1Data, selStrain2Data)
-rm(selStrain1Model,selStrain2Model)
-```
-
-####Figure 3
+### 6) Read in meta data and make new tables with location information
 ```{r Figure 3 EC50 distribution based on state, echo=FALSE, fig.width=7}
 # import demographic data for MI and IL experiment
 setwd(dataPath)
@@ -469,16 +321,159 @@ EC50SumPlateGeoYear <- merge(EC50SumFilterPlate, strainInfoAll,
 EC50SumConidiaGeoYear <- merge(EC50SumFilterConidia, ILStrainInfoSub, 
                                by.x = "strainName", by.y = "isolate")
 
-ggplot(data = EC50SumPlateGeoYear, aes(x = state, y = EC50)) +
-  geom_boxplot() + geom_jitter(height = 0)
-
-ggplot(data = EC50SumConidiaGeoYear, aes(x = state, y = EC50)) +
-  geom_boxplot() + geom_jitter(height = 0)
+# ggplot(data = EC50SumPlateGeoYear, aes(x = state, y = EC50)) +
+#   geom_boxplot() + geom_jitter(height = 0)
+# 
+# ggplot(data = EC50SumConidiaGeoYear, aes(x = state, y = EC50)) +
+#   geom_boxplot() + geom_jitter(height = 0)
 
 ```
 
 
-####Figure 4
+
+
+
+
+
+
+## 4, Results
+
+### 1) Statistics
+
+```{r plate assay statistics}
+
+# summary(EC50PlateSum$EC50)
+# dim(EC50PlateSum)
+# dim(EC50PlateSum[EC50PlateSum$EC50 > 2 & EC50PlateSum$EC50 < 4, ])
+# 
+# # dim(EC50PlateSum)
+# 
+# plateM.1 <- lm(EC50 ~ State + Year ,EC50PlateSum)
+# car::Anova(plateM.1, type = 2)
+# 
+# 
+# # Conidia assay
+# # summary of the EC50 estimation
+# summary(EC50ConidiaSum$EC50)
+# dim(EC50ConidialTable)
+
+
+```
+
+
+
+### 2) Figures
+
+####Figure 1 EC50 histogram
+```{r Histogram EC50 distrubnution (plate), echo=FALSE, width = 14}
+histPlotPlateA <- ggplot(EC50PlateSum, aes(x=EC50)) + 
+  geom_histogram(aes(y=(..count..)),
+                 # stat = "identity",
+                 binwidth=.5, 
+                 colour="dark green", fill="white",size=0.9) +
+  geom_vline(aes(xintercept=mean(EC50, na.rm=T)),colour="red", 
+             linetype="dashed", size=1) + theme_grey() + geom_rug() + 
+  scale_x_continuous(breaks=0:12, limits = c(0,10)) + 
+  scale_y_continuous(breaks=c(0,5,10,15,20,25,30)) + 
+  labs(y="Frequency", x=expression('Fluopyram EC'[50]*' (mg/L)')) +
+  theme_classic() +
+  theme(axis.text   = element_text(size=14), 
+        axis.title  = element_text(size=16),
+        axis.text.x = element_text(colour="black"), 
+        axis.text.y = element_text(colour="black")) +
+  geom_text(x = 10, y =25, label="A", fontface = "bold", size = 10)
+  
+
+histPlotConidiaB <- ggplot(EC50ConidiaSum, aes(x=EC50)) + 
+  geom_histogram(aes(y=(..count..)),
+                 binwidth=.5, 
+                 colour="dark green",
+                 fill="white",size=0.9) +
+  geom_vline(aes(xintercept=mean(EC50, na.rm=T)),colour="red", 
+             linetype="dashed", size=1) + theme_grey() + geom_rug() + 
+  scale_x_continuous(breaks=0:12, limits = c(0,10)) + 
+  scale_y_continuous(breaks=c(0,5,10,15,20,25,30)) + 
+  labs(y="Frequency", x=expression('Fluopyram EC'[50]*' (mg/L)')) +
+  theme_classic()+
+  theme(axis.text   = element_text(size=14), 
+        axis.title  = element_text(size=16),
+        axis.text.x = element_text(colour="black"), 
+        axis.text.y = element_text(colour="black")) +
+  geom_text(x = 10, y =25, label="B", fontface = "bold", size = 10)
+grid.arrange(histPlotPlateA, histPlotConidiaB, ncol=2)
+
+
+```
+
+
+####Figure 2-1 Growth curve fit (Plate and conidia)
+```{r growth curve fit (plate), echo=FALSE, fig.width=10, warning=FALSE}
+par(mfrow = c(1,2))
+# good fit strains
+selStrain2 <- c("12@KSSH_A2","12@MIVB_A5")
+selStrain2Data <- fullPlateData[fullPlateData$setStrain %in% selStrain2,]
+selStrain2Model <- drm(growthRate~Conc,
+                  format(Strain,trim=TRUE),
+                  fct=LL.4(names=c("slope","Lower","Upper","EC50")),
+                  data=selStrain2Data)
+plot(selStrain2Model,type = "all",
+     broken = TRUE,
+     col = TRUE,
+     cex.legend = 0.9,
+     level=c("KSSH_A2","MIVB_A5"),
+     xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
+     ylab = "Mycelial Growth Rate (cm/d)",
+     cex.axis = 1,
+     main = "Normal data fit",
+     legendPos = c(95,0.14),
+     ylim = c(0,0.14))
+
+# bad fit strains
+selStrain1 <- c("MIBer_A5", "STJ3a")
+selStrain1Data <- fullPlateData[fullPlateData$Strain %in% selStrain1,]
+selStrain1Model <- drm(growthRate~Conc,
+                  format(Strain,trim=TRUE),
+                  fct=LL.4(names=c("slope","Lower","Upper","EC50")),
+                  data=selStrain1Data)
+plot(selStrain1Model,type = "all",
+     broken = TRUE,
+     col = TRUE,
+     cex.legend = 0.9,
+     xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
+     ylab = "Mycelial Growth Rate (cm/d)",
+     cex.axis = 1,
+     main = "Hormetic effect",
+     legendPos = c(95,0.14),
+     ylim = c(0,0.14))
+
+rm(selStrain1, selStrain2, selStrain1Data, selStrain2Data)
+rm(selStrain1Model,selStrain2Model)
+```
+
+####Figure 2-2 Growth curve fit (conidia)
+```{r growth curve fit (conidia), echo=FALSE, fig.width=5.5, warning=FALSE}
+par(mfrow = c(1,1))
+# good fit strains
+selStrain2 <- c("KSSH-A7@10","LE-11-1@10","LL0059@14")
+selStrain2Data <- coniNoNaData[coniNoNaData$setStrain %in% selStrain2,]
+selStrain2Model <- drm(germinate~Conc,
+                  format(Isolate,trim=TRUE),
+                  fct=LL.4(names=c("slope","Lower","Upper","EC50")),
+                  data=selStrain2Data)
+plot(selStrain2Model,type = "all", broken = TRUE, col = TRUE, cex.legend = 0.9,
+     #level=selStrain2,
+     xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
+     ylab = "Germinated conidia", cex.axis = 1,
+     main = "Normal data fit", ylim = c(0, 50), xlim = c(0,20))
+     # legendPos = c(20,0.04))
+     #ylim = c(0,0.14))
+
+rm(selStrain1, selStrain2, selStrain1Data, selStrain2Data)
+rm(selStrain1Model,selStrain2Model)
+```
+
+
+####Figure 3 method validation
 ```{r Figure 4 compare two methods, echo=FALSE, fig.width=6}
 
 # correct strain name
@@ -574,7 +569,7 @@ cor.test(xyPlConiData$pEC50,xyPlConiData$cEC50, method="spearman")
 ```
 
 
-#### Supplimental figures or tables
+## Supplementals
 
 ```{r Tables S1 S2 S3}
 
@@ -609,7 +604,8 @@ sumPlateTable <- EC50PlateTable %>% group_by(State) %>% arrange(Year) %>%
   #filter(!is.na(Year)) %>%
   summarise(N = length(EC50),
             Years = paste(first(Year),"-",last(Year)),
-            EC50Range = paste(round(min(EC50),2),"-", round(max(EC50),2))
+            EC50Range = paste(round(min(EC50),2),"-", round(max(EC50),2)),
+            EC50Mean = mean(EC50)
             )
 kable(sumPlateTable,
       caption = "Table1 Geographical and year collection for the F. virguliforme\
@@ -621,7 +617,8 @@ sumConidiaTable <- EC50ConidialTable %>% group_by(State) %>% arrange(Year) %>%
   #filter(!is.na(Year)) %>%
   summarise(N = length(EC50),
             Years = paste(first(Year),"-",last(Year)),
-            EC50Range = paste(round(min(EC50),2),"-", round(max(EC50),2))
+            EC50Range = paste(round(min(EC50),2),"-", round(max(EC50),2)),
+            EC50Mean = mean(EC50)
             )
 kable(sumConidiaTable,
       caption = "__Table 2.__ Geographical and year collection for the F. virguliforme\
@@ -657,7 +654,7 @@ kable(noEC50Table,
 
 ```{r test reproducibility of the plate assay experiment}
 
-fullPlateData
+# fullPlateData
 
 
 ```
