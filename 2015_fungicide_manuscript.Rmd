@@ -100,6 +100,27 @@ for (strain in levels(fullPlateData$setStrain)) {
   }
 }
 fullPlateDataExclude50 <- fullPlateData[!fullPlateData$setStrain %in% strainNoEc50,]
+
+filter(fullPlateDataExclude50, setStrain == "14@Mont1")
+
+# detect if there is a hormetic effect
+for (strain in levels(factors(fullPlateDataExclude50$setStrain))) {
+  subData.3 <- filter(fullPlateDataExclude50, setStrain == strain)
+  cat(strain)
+  subData.m3 <- drm(growthRate ~ Conc, 
+                  format(setStrain, trim=TRUE),
+                  fct=LL.4(),
+                  data=subData.3)
+  modelTest <- mselect(subData.m3, list(LL.3(),BC.4()))
+  if (grepl("BC", rownames(modelTest)[1])) {
+    fullPlateDataExclude50$hormetic[fullPlateDataExclude50$setStrain == strain] = TRUE
+  } else {
+    fullPlateDataExclude50$hormetic[fullPlateDataExclude50$setStrain == strain] = FALSE
+  }
+}
+fullPlateDataExclude50[fullPlateDataExclude50$setStrain == "1@Mo4a"]
+
+
 ```
 
 ### 3) Calculate EC50 for poison plate assay
@@ -185,7 +206,7 @@ for (strainName in sort(levels(factor(EC50SumFilterPlate$Strain)))){
 ```
 
 
-### 4) Calculate EC50 for poison plate assay
+### 4) Calculate EC50 for conidia germination assay
 ```{r import data conidia, echo = FALSE,  message = FALSE}
 # Prepare data path
 conidiaDataPath <- paste(dataPath,"/conidiaAssay.csv",sep="")
@@ -329,43 +350,12 @@ EC50SumConidiaGeoYear <- merge(EC50SumFilterConidia, ILStrainInfoSub,
 
 ```
 
-
-
-
-
-
-
-
 ## 4, Results
-
-### 1) Statistics
-
-```{r plate assay statistics}
-
-# summary(EC50PlateSum$EC50)
-# dim(EC50PlateSum)
-# dim(EC50PlateSum[EC50PlateSum$EC50 > 2 & EC50PlateSum$EC50 < 4, ])
-# 
-# # dim(EC50PlateSum)
-# 
-# plateM.1 <- lm(EC50 ~ State + Year ,EC50PlateSum)
-# car::Anova(plateM.1, type = 2)
-# 
-# 
-# # Conidia assay
-# # summary of the EC50 estimation
-# summary(EC50ConidiaSum$EC50)
-# dim(EC50ConidialTable)
-
-
-```
-
-
 
 ### 2) Figures
 
 ####Figure 1 EC50 histogram
-```{r Histogram EC50 distrubnution (plate), echo=FALSE, width = 14}
+```{r Histogram EC50 distrubnution (plate), echo=FALSE, fig.width=12}
 histPlotPlateA <- ggplot(EC50PlateSum, aes(x=EC50)) + 
   geom_histogram(aes(y=(..count..)),
                  # stat = "identity",
@@ -407,10 +397,10 @@ grid.arrange(histPlotPlateA, histPlotConidiaB, ncol=2)
 
 
 ####Figure 2-1 Growth curve fit (Plate and conidia)
-```{r growth curve fit (plate), echo=FALSE, fig.width=10, warning=FALSE}
+```{r growth curve fit (plate), echo=FALSE, fig.width=12, warning=FALSE}
 par(mfrow = c(1,2))
 # good fit strains
-selStrain2 <- c("12@KSSH_A2","12@MIVB_A5")
+selStrain2 <- c("7@Mo1b","7@Mont1", "13@14Fv1", "13@14Fv21")
 selStrain2Data <- fullPlateData[fullPlateData$setStrain %in% selStrain2,]
 selStrain2Model <- drm(growthRate~Conc,
                   format(Strain,trim=TRUE),
@@ -420,41 +410,32 @@ plot(selStrain2Model,type = "all",
      broken = TRUE,
      col = TRUE,
      cex.legend = 0.9,
-     level=c("KSSH_A2","MIVB_A5"),
+     #level=c("KSSH_A2","MIVB_A5"),
      xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
      ylab = "Mycelial Growth Rate (cm/d)",
      cex.axis = 1,
-     main = "Normal data fit",
+     main = "Mycelial growth inhibition assay",
      legendPos = c(95,0.14),
      ylim = c(0,0.14))
 
 # bad fit strains
-selStrain1 <- c("MIBer_A5", "STJ3a")
-selStrain1Data <- fullPlateData[fullPlateData$Strain %in% selStrain1,]
-selStrain1Model <- drm(growthRate~Conc,
-                  format(Strain,trim=TRUE),
-                  fct=LL.4(names=c("slope","Lower","Upper","EC50")),
-                  data=selStrain1Data)
-plot(selStrain1Model,type = "all",
-     broken = TRUE,
-     col = TRUE,
-     cex.legend = 0.9,
-     xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
-     ylab = "Mycelial Growth Rate (cm/d)",
-     cex.axis = 1,
-     main = "Hormetic effect",
-     legendPos = c(95,0.14),
-     ylim = c(0,0.14))
-
-rm(selStrain1, selStrain2, selStrain1Data, selStrain2Data)
-rm(selStrain1Model,selStrain2Model)
-```
-
-####Figure 2-2 Growth curve fit (conidia)
-```{r growth curve fit (conidia), echo=FALSE, fig.width=5.5, warning=FALSE}
-par(mfrow = c(1,1))
-# good fit strains
-selStrain2 <- c("KSSH-A7@10","LE-11-1@10","LL0059@14")
+# selStrain1 <- c("MIBer_A5", "STJ3a")
+# selStrain1Data <- fullPlateData[fullPlateData$Strain %in% selStrain1,]
+# selStrain1Model <- drm(growthRate~Conc,
+#                   format(Strain,trim=TRUE),
+#                   fct=LL.4(names=c("slope","Lower","Upper","EC50")),
+#                   data=selStrain1Data)
+# plot(selStrain1Model,type = "all",
+#      broken = TRUE,
+#      col = TRUE,
+#      cex.legend = 0.9,
+#      xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
+#      ylab = "Mycelial Growth Rate (cm/d)",
+#      cex.axis = 1,
+#      main = "Hormetic effect",
+#      legendPos = c(95,0.14),
+#      ylim = c(0,0.14))
+selStrain2 <- c("Mo1b@10", "Mont-1@10", "14Fv1@7", "14Fv21@7")
 selStrain2Data <- coniNoNaData[coniNoNaData$setStrain %in% selStrain2,]
 selStrain2Model <- drm(germinate~Conc,
                   format(Isolate,trim=TRUE),
@@ -464,12 +445,22 @@ plot(selStrain2Model,type = "all", broken = TRUE, col = TRUE, cex.legend = 0.9,
      #level=selStrain2,
      xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
      ylab = "Germinated conidia", cex.axis = 1,
-     main = "Normal data fit", ylim = c(0, 50), xlim = c(0,20))
+     main = "Conidial germination assay", ylim = c(0, 50), xlim = c(0,20))
      # legendPos = c(20,0.04))
      #ylim = c(0,0.14))
 
+
+
+
 rm(selStrain1, selStrain2, selStrain1Data, selStrain2Data)
 rm(selStrain1Model,selStrain2Model)
+```
+
+####Figure 2-2 Growth curve fit (conidia)
+```{r growth curve fit (conidia), echo=FALSE, fig.width=5.5, warning=FALSE}
+# par(mfrow = c(1,1))
+# good fit strains
+
 ```
 
 
@@ -562,7 +553,7 @@ abline(lm(pEC50~cEC50, data=xyPlConiData))
 # Lines <- list(bquote(expression(italic("y = 2.553 + 0.357x"))),bquote("Spearman Correlation p = 0.4"))
 # mtext(do.call(expression, Lines),side=3,line=1:0)
 
-text(x=3.5, y=3, cex=0.8, label = expression(atop(italic("y = 2.553 + 0.369x"),
+text(x=1.5, y=3.5, cex=0.8, label = expression(atop(italic("y = 2.553 + 0.369x"),
                                          "Spearman correlation p = 0.4")))
 # lm(pEC50~cEC50, data=xyPlConiData)
 cor.test(xyPlConiData$pEC50,xyPlConiData$cEC50, method="spearman")
@@ -651,11 +642,146 @@ kable(noEC50Table,
 
 ```
 
+```{r  reproducibility}
+# plate reproduce
+dupPlateStrains <- EC50SumFilterPlate[duplicated(EC50SumFilterPlate$Strain),]$Strain
+dupPlateData <- EC50SumFilterPlate[EC50SumFilterPlate$Strain %in% dupPlateStrains, ]
+# table(factor(dupPlateData$Strain))
 
-```{r test reproducibility of the plate assay experiment}
+dupPlateDataSort <- dupPlateData[order(dupPlateData$EC50), ]
+dupPlateDataSort <- dupPlateDataSort[order(dupPlateDataSort$Strain), ]
+dupPlateDataSort$Set2 <- rep(1:2, length(dupPlateDataSort$Set)/2)
+dupPlateDataSort$set2Strain <- paste(dupPlateDataSort$Strain,dupPlateDataSort$Set2,sep="_")
 
-# fullPlateData
+# if(dupPlateDataSort[1,]$EC50 < dupPlateDataSort[2,]$Upper & 
+#   dupPlateDataSort[1,]$EC50 > dupPlateDataSort[2,]$Lower) {
+#   cat("TRUE")
+#   }
+
+for (i in seq(1,43,2)){
+  if (dupPlateDataSort[i,]$Upper > dupPlateDataSort[i+1,]$Lower){
+    dupPlateDataSort$reproduce[i:(i+1)] <- TRUE
+  } else {
+    dupPlateDataSort$reproduce[i:(i+1)] <- FALSE
+  }
+}
+
+ggplot(dupPlateDataSort, aes(y = EC50, x = set2Strain)) + 
+  geom_bar(stat="identity", aes(fill = reproduce)) + 
+  geom_errorbar(aes(ymax = Upper, ymin=Lower), 
+               position = position_dodge(width = 0.9), width=0.25) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# conidia reproduce
+dupConidiaStrains <- EC50SumFilterConidia[duplicated(EC50SumFilterConidia$Strain),]$Strain
+dupConidiaData <- EC50SumFilterConidia[EC50SumFilterConidia$Strain %in% dupConidiaStrains,]
+dupConidiaData$Strain <- factor(dupConidiaData$Strain)
+
+dupConidia2Name <- names(table(dupConidiaData$Strain)[table(dupConidiaData$Strain)<=2])
+dupConidia2Data <- dupConidiaData[dupConidiaData$Strain %in% dupConidia2Name,]
+dupConidia2DataSort <- dupConidia2Data[order(dupConidia2Data$EC50),]
+dupConidia2DataSort <- dupConidia2DataSort[order(dupConidia2DataSort$Strain),]
+dupConidia2DataSort$Set2 <- rep(1:2, length(dupConidia2DataSort$EC50)/2)
+dupConidia2DataSort$set2Strain <- paste(dupConidia2DataSort$Strain,
+                                        dupConidia2DataSort$Set2, sep="_")
+for (i in seq(1,101,2)){
+  if (dupConidia2DataSort[i,]$Upper > dupConidia2DataSort[i+1,]$Lower){
+    dupConidia2DataSort$reproduce[i:(i+1)] <- TRUE
+  } else {
+    dupConidia2DataSort$reproduce[i:(i+1)] <- FALSE
+  }
+}
+table(dupConidia2DataSort$reproduce)/2
+
+ggplot(dupConidia2DataSort, aes(y = EC50, x = set2Strain)) + 
+  geom_bar(stat="identity", aes(fill = reproduce) ) + 
+  geom_errorbar(aes(ymax = Upper, ymin=Lower), 
+               position = position_dodge(width = 0.9), width=0.25) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
 
 
 ```
+
+
+
+
+
+```{r model selection}
+subData.2 <- subset(fullPlateDataExclude50, 
+                  subset = fullPlateDataExclude50$setStrain %in% c("2@AL1b","7@Mont1", "13@14Fv1", "13@14Fv21"))
+subData.3 <- subset(fullPlateDataExclude50, 
+                  subset = fullPlateDataExclude50$setStrain %in% c("14@Mont1"))
+subData.m2 <- drm(growthRate ~ Conc, 
+                  format(setStrain, trim=TRUE),
+                  fct=LL.4(),
+                  data=subData.2)
+subData.m3 <- drm(growthRate ~ Conc, 
+                  format(setStrain, trim=TRUE),
+                  fct=LL.3(),
+                  data=subData.1)
+subData.m4 <- drm(growthRate ~ Conc, 
+                  format(setStrain, trim=TRUE),
+                  fct=LL.5(),
+                  data=subData.1)
+subData.m5 <- drm(growthRate ~ Conc, 
+                  format(setStrain, trim=TRUE),
+                  fct=CRS.4c(),
+                  data=subData.1)
+subData.m6 <- drm(growthRate ~ Conc, 
+                  format(setStrain, trim=TRUE),
+                  fct=BC.4(),
+                  data=subData.2)
+subData.m7<- drm(growthRate ~ Conc, 
+                  format(setStrain, trim=TRUE),
+                  fct=W1.4(),
+                  data=subData.1)
+subData.m8<- drm(growthRate ~ Conc, 
+                  format(setStrain, trim=TRUE),
+                  fct=W2.4(),
+                  data=subData.1)
+anova(subData.m2, subData.m3)
+
+mselect(subData.m2, list(LL.3(), LL.5(), W1.4(), W2.4(), CRS.4c(), BC.4(), BC.5()))
+plot(subData.m6)
+summary(subData.m6)
+ED(subData.m6, c(50))  
+
+ED_table <- ED(subData.m2,c(50), interval="delta", type = "absolte")
+ModelSummary <- summary(subData.m2)
+
+
+
+```
+
+
+
+
+
+### 1) Statistics
+
+```{r plate assay statistics}
+
+# summary(EC50PlateSum$EC50)
+dim(EC50PlateTable)
+dim(EC50PlateTable[EC50PlateTable$EC50 > 2 & EC50PlateTable$EC50 < 4, ])
+
+# # dim(EC50PlateSum)
+# 
+plateM.1 <- lm(EC50 ~ State + Year ,EC50PlateTable)
+car::Anova(plateM.1, type = 2)
+# 
+# 
+# # Conidia assay
+# # summary of the EC50 estimation
+summary(EC50ConidiaSum$EC50)
+dim(EC50ConidialTable)
+dim(EC50ConidialTable[EC50ConidialTable$EC50 > 1 & EC50ConidialTable$EC50 < 3.5,])
+66/74
+# conidia assay anova
+conidiaM.1 <- lm(EC50 ~ State + Year ,EC50ConidialTable)
+car::Anova(conidiaM.1, type = 2)
+
+```
+
+
 
