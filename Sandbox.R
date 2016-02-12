@@ -220,8 +220,6 @@ mselect(selStrain1.mTest, list(LL.3(), LL.5(), W1.4(), W2.4(), CRS.4c(), BC.4())
 selStrain1.mTest <- drm(growthRate~Conc,format(Strain,trim=TRUE),
                      data=selStrain1Data, fct = LL.4())
 
-
-
 selStrain2 <- c("12@KSSH_A2","12@MIVB_A5")
 selStrain2Data <- fullPlateData[fullPlateData$setStrain %in% selStrain2,]
 selStrain2Model <- drm(growthRate~Conc,
@@ -232,7 +230,53 @@ modelFit(selStrain2Model)
 coef(selStrain2Model) 
 
 
-#####
-a <- factor(c(1,2,3,4,5))
-levels(a)
-levels(factor(a[1:3]))
+# hormetic effect 
+subData.test <- filter(fullPlateDataExclude50, setStrain == "2@MIVB_A5")
+subData.mTest <- drm(growthRate ~ Conc,
+                     format(setStrain, trim=TRUE),
+                     fct=LL.4(),
+                     data=subData.test)
+plot(subData.mTest )
+
+plot(subData.mTest,type = "all",
+     broken = TRUE,
+     col = TRUE,
+     cex.legend = 0.9,
+     #level=c("KSSH_A2","MIVB_A5"),
+     xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
+     ylab = "Mycelial Growth Rate (cm/d)",
+     cex.axis = 1,
+     main = paste(subData.mTest$data[,4][1]),
+     legendPos = c(95,0.14),
+     ylim = c(0,0.14))
+# 
+# mselect(subData.m3, list(LL.3(),BC.4()))
+
+subData.test <- filter(coniNoNaDataExclude50, Isolate == "13Fv165")
+subData.mTest <- drm(germinate ~ Conc,
+                     format(setStrain, trim=TRUE),
+                     fct=LL.4(),
+                     data=subData.test)
+plot(subData.mTest, type = "all")
+
+mselect(subData.mTest, list(LL.3(), LL.4(), W1.4(), W2.4(), CRS.4c(), BC.4(), BC.5()))
+
+
+# test code 
+install.packages("fitbitScraper")  
+library("fitbitScraper")
+# just reading from file to hide pw and to make .Rmd document to work...
+mypassword <- 
+cookie <- login(email="wjidea@gmail.com", password=mypassword) 
+df <- get_intraday_data(cookie, what="steps", date="2015-01-10")  
+library("ggplot2")  
+ggplot(df) + geom_bar(aes(x=time, y=steps, fill=steps), stat="identity") + 
+  xlab("") +ylab("steps") + 
+  theme(axis.ticks.x=element_blank(), 
+        panel.grid.major.x = element_blank(), 
+        panel.grid.minor.x = element_blank(), 
+        panel.grid.minor.y = element_blank(), 
+        panel.background=element_blank(), 
+        panel.grid.major.y=element_line(colour="gray", size=.1), 
+        legend.position="none") 
+
