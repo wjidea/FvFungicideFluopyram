@@ -543,7 +543,7 @@ cor.test(xyPlConiData$pEC50,xyPlConiData$cEC50, method="spearman")
 ```
 
 #### Table 2
-```{r Table 2 hormetic effect}
+```{r Table 2 hormetic effect,eval=FALSE,echo=FALSE}
 
 # detect if there is a hormetic effect
 for (strain in levels(factor(fullPlateDataExclude50$setStrain))) {
@@ -578,30 +578,25 @@ for (strainSet in levels(factor(hormeticData$setStrain)) ){
                     format(setStrain, trim=TRUE),
                     fct=BC.4(),
                     data=subData)
-  ED_table <- ED(subData.m1,c(50), interval="delta")
+  ED_table <- ED(subData.m1,c(50), interval="delta", bound = FALSE)
   ModelSummary <- summary(subData.m1)
   # include pvalue along with EC50 calculation
   ED_table_p <- cbind(ED_table,pvalue = ModelSummary$coefficients[4,4])
   EC50RawHormetic <- rbind(EC50RawHormetic, ED_table_p)
 }
 
-colnames(EC50Raw) <- c( "EC50", "StdErr", "Lower", "Upper","pvalue")
+colnames(EC50RawHormetic) <- c( "EC50", "StdErr", "Lower", "Upper","pvalue")
 
 # split the row setStrain name into two columns PARSE strain names and sets
 # strainCols <- do.call(rbind, strsplit(rownames(EC50Sum), "@"))
-strainSplitList <- str_split_fixed(rownames(EC50Raw), "@", 2)
+strainSplitList <- str_split_fixed(rownames(EC50RawHormetic), "@", 2)
 strainSplitList <- cbind(strainSplitList, 
                          str_split_fixed(strainSplitList[,2],":",2))
 strainSplitList <- strainSplitList[,c(1,3)]
 colnames(strainSplitList) <- c("Set","Strain")
-EC50Sum <- cbind(EC50Raw, strainSplitList)
-rownames(EC50Sum) <- paste(EC50Sum$Strain,EC50Sum$Set,sep = "_")
-EC50Sum <- na.exclude(EC50Sum)
-
-# need to filter non-significant EC50 estimations for the EC50 dataframe
-# level of significance: alpha = 0.05
-EC50SumFilterPlate <- EC50Sum[EC50Sum$pvalue <= 0.05,]
-
+EC50SumHormetic <- cbind(EC50RawHormetic, strainSplitList)
+rownames(EC50SumHormetic) <- paste(EC50Sum$Strain,EC50Sum$Set,sep = "_")
+# EC50SumHormetic$Strain[duplicated(EC50SumHormetic$Strain)]
 
 
 ```
