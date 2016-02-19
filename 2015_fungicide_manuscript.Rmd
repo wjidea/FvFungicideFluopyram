@@ -806,7 +806,7 @@ ggplot(dupPlateDataSort, aes(y = EC50, x = set2Strain)) +
   geom_bar(stat="identity", aes(fill = reproduce)) + 
   geom_errorbar(aes(ymax = Upper, ymin=Lower), 
                position = position_dodge(width = 0.9), width=0.25) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
 
 # conidia reproduce
 dupConidiaStrains <- EC50SumFilterConidia[duplicated(EC50SumFilterConidia$Strain),]$Strain
@@ -833,7 +833,7 @@ ggplot(dupConidia2DataSort, aes(y = EC50, x = set2Strain)) +
   geom_bar(stat="identity", aes(fill = reproduce) ) + 
   geom_errorbar(aes(ymax = Upper, ymin=Lower), 
                position = position_dodge(width = 0.9), width=0.25) +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) 
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 4.5)) 
 
 
 ```
