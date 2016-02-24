@@ -806,6 +806,7 @@ ggplot(dupPlateDataSort, aes(y = EC50, x = set2Strain)) +
   geom_bar(stat="identity", aes(fill = reproduce)) + 
   geom_errorbar(aes(ymax = Upper, ymin=Lower), 
                position = position_dodge(width = 0.9), width=0.25) +
+  labs(x = "Strains") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
 
 # conidia reproduce
@@ -833,6 +834,7 @@ ggplot(dupConidia2DataSort, aes(y = EC50, x = set2Strain)) +
   geom_bar(stat="identity", aes(fill = reproduce) ) + 
   geom_errorbar(aes(ymax = Upper, ymin=Lower), 
                position = position_dodge(width = 0.9), width=0.25) +
+  labs(x = "strains") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 4.5)) 
 
 
@@ -847,8 +849,9 @@ subData.3 <- subset(fullPlateDataExclude50,
 subData.m2 <- drm(growthRate ~ Conc, 
                   format(setStrain, trim=TRUE),
                   fct=LL.4(),
-                  data=subData.3)
+                  data=subData.2)
 summary(subData.m2)
+ED(subData.m2, respLev = c(50), type = "absolute")
 subData.m3 <- drm(growthRate ~ Conc, 
                   format(setStrain, trim=TRUE),
                   fct=LL.3(),
@@ -898,6 +901,8 @@ ModelSummary <- summary(subData.m2)
 # summary(EC50PlateSum$EC50)
 dim(EC50PlateTable)
 dim(EC50PlateTable[EC50PlateTable$EC50 > 2 & EC50PlateTable$EC50 < 4, ])
+dim(EC50PlateTable[EC50PlateTable$EC50 <= 5, ])
+dim(EC50PlateTable)
 
 # # dim(EC50PlateSum)
 # 
@@ -910,6 +915,8 @@ car::Anova(plateM.1, type = 2)
 summary(EC50ConidiaSum$EC50)
 dim(EC50ConidialTable)
 dim(EC50ConidialTable[EC50ConidialTable$EC50 > 1 & EC50ConidialTable$EC50 < 3.5,])
+dim(EC50ConidialTable[EC50ConidialTable$EC50 < 5,])
+dim(EC50ConidialTable)
 
 # conidia assay anova
 conidiaM.1 <- lm(EC50 ~ State + Year ,EC50ConidialTable, type = 2)
