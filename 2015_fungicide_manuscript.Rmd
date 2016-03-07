@@ -224,9 +224,6 @@ for (strain in levels(coniNoNaData$setStrain)) {
   }
 }
 coniNoNaDataExclude50 <- coniNoNaData[!coniNoNaData$setStrain %in% strainNoEc50_conidia,]
-
-
-
 ```
 
 ### 5) Calculate EC50 for conidia assay
@@ -393,11 +390,11 @@ par(mfrow = c(1,2))
 # good fit strains
 selStrain2 <- c("7@Mo1b","7@Mont1", "13@14Fv1", "13@14Fv21")
 selStrain2Data <- fullPlateData[fullPlateData$setStrain %in% selStrain2,]
-selStrain2Model <- drm(growthRate~Conc,
+selStrain2Model1 <- drm(growthRate~Conc,
                   format(Strain,trim=TRUE),
                   fct=LL.4(names=c("slope","Lower","Upper","EC50")),
                   data=selStrain2Data)
-plot(selStrain2Model,type = "all",
+plot(selStrain2Model1,type = "all",
      broken = TRUE,
      col = TRUE,
      cex.legend = 0.9,
@@ -410,12 +407,14 @@ plot(selStrain2Model,type = "all",
      ylim = c(0,0.14))
 
 selStrain2 <- c("Mo1b@10", "Mont-1@10", "14Fv1@7", "14Fv21@7")
-selStrain2Data <- coniNoNaData[coniNoNaData$setStrain %in% selStrain2,]
-selStrain2Model <- drm(germinate~Conc,
+selStrain2Data <- coniNoNaData[coniNoNaData$setStrain %in% selStrain2,,drop=TRUE]
+selStrain2Data <- selStrain2Data[order(selStrain2Data$Isolate),]
+#selStrain2Data$Isolate <- factor(selStrain2Data$Isolate)
+selStrain2Model2 <- drm(germinate~Conc,
                   format(Isolate,trim=TRUE),
                   fct=LL.4(names=c("slope","Lower","Upper","EC50")),
                   data=selStrain2Data)
-plot(selStrain2Model,type = "all", broken = TRUE, col = TRUE, cex.legend = 0.9,
+plot(selStrain2Model2,type = "all", broken = TRUE, col = TRUE, cex.legend = 0.9,
      #level=selStrain2,
      xlab = expression('Log10 Transformed Fluopyram Concentration (mg/L)'),
      ylab = "Germinated conidia", cex.axis = 1,
@@ -438,6 +437,7 @@ selStrain1Model.LL4 <- drm(growthRate~Conc,
                   format(Strain,trim=TRUE),
                   fct=LL.4(names=c("slope","Lower","Upper","EC50")),
                   data=selStrain1Data)
+mselect(selStrain1Model.LL4, list(BC.4()))
 plot(selStrain1Model.LL4,type = "all",
      broken = TRUE,
      col = TRUE,
@@ -550,20 +550,22 @@ xyPlConiData$PLdiffL <- with(xyPlConiData, pL - cL)
 update(segplot(reorder(strainName, PLdiff) ~ PLdiffL + PLdiffU, data = xyPlConiData, 
         centers = PLdiff, draw.bands = FALSE, 
         #xlab = "Difference between plate and conidia assay EC50 estimate (µg/mL)",
-        xlab = expression('Poison plate EC'[50]*' - Conidia assay EC'[50] * ' (µg/mL)'),
+        xlab = expression('Mycelial growth assay EC'[50]*' - Conidia germination assay EC'[50] * ' (µg/mL)'),
         ylab = "Strains") +
   layer(panel.ablineq(v=0, label = NULL, col.line = "grey", x = -0.6, y = 20)))
 
 plot(pEC50~cEC50, data=xyPlConiData, xlab=expression('Conidia assay EC'[50]),
-     ylab=expression('Plate assay EC'[50]))
+     ylab=expression('Mycelial growth assay EC'[50]))
 abline(lm(pEC50~cEC50, data=xyPlConiData))
 # Lines <- list(bquote(expression(italic("y = 2.553 + 0.357x"))),bquote("Spearman Correlation p = 0.4"))
 # mtext(do.call(expression, Lines),side=3,line=1:0)
 
 text(x=1.5, y=3.5, cex=0.8, label = expression(atop(italic("y = 2.553 + 0.0369x"),
                                          "Spearman correlation p = 0.4")))
-# lm(pEC50~cEC50, data=xyPlConiData)
+# anova(lm(pEC50~cEC50, data=xyPlConiData))
 # cor.test(xyPlConiData$pEC50,xyPlConiData$cEC50, method="spearman")
+# t.test(xyPlConiData$pEC50, xyPlConiData$cEC50, paired = TRUE,
+#        alternative = "greater")
 ```
 
 
@@ -616,7 +618,7 @@ kable(sumConidiaTable,
 
 
 #### Table 3
-```{r Table 3 data prep,cache=TRUE,echo=FALSE, warning=FALSE, eval=FALSE}
+```{r Table 3 data prep,cache=TRUE,echo=FALSE, warning=FALSE, eval=TRUE}
 
 # not renderred caused by possible error in the model selection step.
 # therefore a csv file was written in the disk and kable will be generated
@@ -633,7 +635,7 @@ for (strain in levels(factor(fullPlateDataExclude50$setStrain))) {
                   fct=LL.4(),
                   data=subData.3)
   modelTest <- mselect(subData.m3, list(BC.4()))
-  cat(modelTest, "\n")
+  # cat(modelTest, "\n")
   if (grepl("BC", rownames(modelTest)[1])) {
     fullPlateDataExclude50$hormetic[fullPlateDataExclude50$setStrain == strain] <- TRUE
   } else {
@@ -642,10 +644,10 @@ for (strain in levels(factor(fullPlateDataExclude50$setStrain))) {
 }
 
 hormeticData <- filter(fullPlateDataExclude50, hormetic == TRUE)
-
-# create empty list with colNames 
+hormeticData <- filter(hormeticData, !(setStrain %in% c("7@ARLE_C2","9@MISTJ-D6")))
+# create empty list with colNames
 EC50RawHormetic <- data.frame(straiName = character(0), EC50 = numeric(0), 
-                      StdErr = numeric(0), Lower = numeric(0), 
+                      StdErr = numeric(0), Lower = numeric(0),
                       Upper = numeric(0), pvalue = numeric(0))
 
 # loop through all individual set-Strain names and
@@ -709,21 +711,17 @@ BC4prep4 <- data_frame(diff = rep(NA, BC4nRow))
 BC4Add <- cbind(BC4prep1,BC4prep2,BC4prep3,BC4prep4)
 
 LL4vsBC4All <- rbind(LL4vsBC4, BC4Add)
-write.csv(LL4vsBC4All, "LL4vsBC4.csv")
-
+write.csv(LL4vsBC4All, "./Data/LL4vsBC4.csv")
+getwd()
 summary(LL4vsBC4All$diff)
-t.test(LL4vsBC4Table$EC50.LL4, LL4vsBC4Table$EC50.BC4, 
-       paired = TRUE, alternative = "less")
+# t.test(LL4vsBC4Table$EC50.LL4, LL4vsBC4Table$EC50.BC4, 
+#        paired = TRUE, alternative = "less")
 ```
 
 ```{r Table3 hormetic effect Table, eval = TRUE, echo=FALSE}
 # "LL4vsBC4.csv" file was generated from the block above
 
-setwd(dataPath)
-LL4vsBC4Table <- read.csv("LL4vsBC4.csv", row.names = 1)
-# duplicated(LL4vsBC4Table$Strain)
-# row1 <- nrow(LL4vsBC4Table)
-# LL4vsBC4Table[-c(seq(row1-4, row1)),]
+LL4vsBC4Table <- read.csv("./Data/LL4vsBC4.csv", row.names = 1)
 kable(LL4vsBC4Table[,-3])
 
 
