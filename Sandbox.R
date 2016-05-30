@@ -249,7 +249,7 @@ plot(subData.mTest,type = "all",
      main = paste(subData.mTest$data[,4][1]),
      legendPos = c(95,0.14),
      ylim = c(0,0.14))
-# 
+
 # mselect(subData.m3, list(LL.3(),BC.4()))
 
 subData.test <- filter(coniNoNaDataExclude50, Isolate == "13Fv165")
@@ -261,22 +261,81 @@ plot(subData.mTest, type = "all")
 
 mselect(subData.mTest, list(LL.3(), LL.4(), W1.4(), W2.4(), CRS.4c(), BC.4(), BC.5()))
 
+# check for relative growth inhibition at highest concentration
 
-# test code 
-install.packages("fitbitScraper")  
-library("fitbitScraper")
-# just reading from file to hide pw and to make .Rmd document to work...
-mypassword <- 
-cookie <- login(email="wjidea@gmail.com", password=mypassword) 
-df <- get_intraday_data(cookie, what="steps", date="2015-01-10")  
-library("ggplot2")  
-ggplot(df) + geom_bar(aes(x=time, y=steps, fill=steps), stat="identity") + 
-  xlab("") +ylab("steps") + 
-  theme(axis.ticks.x=element_blank(), 
-        panel.grid.major.x = element_blank(), 
-        panel.grid.minor.x = element_blank(), 
-        panel.grid.minor.y = element_blank(), 
-        panel.background=element_blank(), 
-        panel.grid.major.y=element_line(colour="gray", size=.1), 
-        legend.position="none") 
+######## 2016-05-28 ###################
+# revised Table S1
+# mycelial assay
+fullPlateData$Strain <- do.call(str_replace_all, 
+                                list(fullPlateData$Strain, "_", "-"))
+subPlate50Ppm <- fullPlateData[fullPlateData$Conc == 50,]
+
+plateRelInhPerc <- subPlate50Ppm %>% group_by(Strain) %>%
+  summarise(N = length(relGrowthRate),
+            relInhibition = mean(relGrowthRate),
+            relSE = sd(relGrowthRate) / sqrt(N))
+
+newECTablePlate1 <- merge(EC50PlateTable, plateRelInhPerc, by="Strain")
+
+isolateNotInFinalTable <- 
+  unique(fullPlateData$Strain)[!unique(fullPlateData$Strain) 
+                               %in% EC50PlateTable$Strain]
+
+isolateNotinFinalDF <- fullPlateData[fullPlateData$Strain %in% 
+                                       isolateNotInFinalTable,]
+plateRelInhPerc_1 <-
+  isolateNotinFinalDF[isolateNotinFinalDF$Conc == 50,] %>%
+  group_by(Strain) %>%
+  summarise(N = length(relGrowthRate),
+            relInhibition = mean(relGrowthRate),
+            relSE = sd(relGrowthRate) / sqrt(N))
+
+# Measurment error at INMO-C4, with relative growth inhibition at 200% at 50 ppm
+plateRelInhPerc_1 <- plateRelInhPerc_1[plateRelInhPerc_1$Strain != "INMO-C4",]
+
+plateRelInhPerc_1_geo <- merge(y=plateRelInhPerc_1, x=strainInfoAll, 
+                               by.y = "Strain", by.x = "isolate")
+
+naDF <- data.frame(EC50=12*NA, StdErr=12*NA,Lower=12*NA, Upper=12*NA)
+plateRelInhPerc_2 <- cbind(plateRelInhPerc_1_geo[,1:4],
+                           naDF,plateRelInhPerc_1_geo[,5:7])
+
+names(plateRelInhPerc_2) <- names(newECTablePlate1)
+newECTablePlate <- rbind(newECTablePlate1, plateRelInhPerc_2)
+
+
+
+############### Conidia Table S2 ######################
+
+subConidia20Ppm <- coniNoNaData[coniNoNaData$Conc == 20,]
+
+coniNoNaData$Isolate <- do.call(str_replace_all, 
+                                list(coniNoNaData$Isolate, "_", "-"))
+
+conidiaIsolateNo20ppm <- coniNoNaData[!(coniNoNaData$Isolate %in% 
+                                          conidiaRelInhPerc$Isolate),]
+
+conidiaRelInhPerc <- subConidia20Ppm %>% group_by(Isolate) %>%
+  summarise(N = length(relGerminate),
+            relInhibition = mean(relGerminate),
+            relSE = sd(relGerminate) / sqrt(N))
+# conidiaRelInhPerc[conidiaRelInhPerc$Isolate %in% "13Fv190",]
+
+newECTableConidia1 <- merge(EC50ConidialTable, conidiaRelInhPerc, 
+                            by.x="Strain", by.y="Isolate")
+
+conidiaRelInhPerc_1 <-
+  conidiaIsolateNo20ppm %>% group_by(Isolate) %>%
+  summarise(N = length(relGerminate),
+            relInhibition = mean(relGerminate),
+            relSE = sd(relGerminate) / sqrt(N))
+
+conidiaRelInhPerc_1_geo <- merge(y=conidiaRelInhPerc_1, x=strainInfoAll, 
+                                by.x = "isolate", by.y = "Isolate")
+
+naDFby4 <- data.frame(EC50=4*NA, StdErr=4*NA,Lower=4*NA, Upper=4*NA)
+conidiaRelInhPerc_2 <- cbind(conidiaRelInhPerc_1_geo[,1:4],
+                           naDFby4,conidiaRelInhPerc_1_geo[,5:7])
+names(conidiaRelInhPerc_2) <- names(newECTableConidia1)
+newECTableConidia <- rbind(newECTableConidia1, conidiaRelInhPerc_2)
 

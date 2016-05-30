@@ -113,7 +113,7 @@ fullPlateDataExclude50 <- fullPlateData[!fullPlateData$setStrain %in% strainNoEc
 write2File <- FALSE # write to file?
 if (file.exists("./Data/EC50_diameter_diamR.txt") & write2File){
   file.remove("./Data/EC50_diameter_diamR.txt")} 
- 
+
 # create empty list with colNames 
 EC50Raw <- data.frame(straiName = character(0), EC50 = numeric(0), 
                       StdErr = numeric(0), Lower = numeric(0), 
@@ -195,12 +195,20 @@ for (strainName in sort(levels(factor(EC50SumFilterPlate$Strain)))){
 ```{r import data conidia, echo = FALSE,  message = FALSE}
 # Prepare data path
 conidiaDataPath <- paste(dataPath,"/conidiaAssay.csv",sep="")
-conidiaData <- read.csv(conidiaDataPath, header = TRUE)
+conidiaColNames <- c("Isolate", "Trial", "Rep", "0", "0.01", "0.1", "1", "5",
+                     "10", "20", "100")
+conidiaData <- read.csv(conidiaDataPath, header = TRUE, 
+                        col.names=conidiaColNames)
 
 # gather cols into rows
 coniDataFormat <- conidiaData %>% tidyr::gather(Conc, germinate, X0:X100)
-levels(coniDataFormat$Conc) <- c(0, 0.01, 0.1, 1, 5, 10, 20, 100)
-coniDataFormat$Conc <- as.numeric.factor(coniDataFormat$Conc)
+concLevels <- c(0, 0.01, 0.1, 1, 5, 10, 20, 100)
+for (i in c(1:8)){
+  idx <- unique(coniDataFormat$Conc)[i]
+  lbl <- concLevels[i]
+  coniDataFormat$Conc[coniDataFormat$Conc == idx] <- lbl  
+}
+coniDataFormat$Conc <- as.numeric(coniDataFormat$Conc)
 coniNoNaData <- na.exclude(coniDataFormat)
 coniNoNaData$setStrain <- with(coniNoNaData, paste(Isolate,Trial,sep="@"))
 coniNoNaData$setStrain <- as.factor(coniNoNaData$setStrain)
@@ -227,7 +235,7 @@ coniNoNaDataExclude50 <- coniNoNaData[!coniNoNaData$setStrain %in% strainNoEc50_
 ```
 
 ### 5) Calculate EC50 for conidia assay
-```{r conida EC50, results = "hide", warning = FALSE, cache=TRUE, echo=FALSE}
+```{r conida EC50, results = "hide", warning = FALSE, echo = FALSE, cache=TRUE}
 # create empty list with colNames
 EC50Raw <- data.frame(straiName = character(0), EC50 = numeric(0), 
                       StdErr = numeric(0), Lower = numeric(0), 
@@ -267,7 +275,7 @@ EC50Sum <- na.exclude(EC50Sum)
 
 # need to filter non-significant EC50 estimations for the EC50 dataframe
 # level of significance: alpha = 0.05
-
+EC50SumNoFilterConidia <- EC50Sum
 EC50SumFilterConidia <- EC50Sum[EC50Sum$pvalue <= 0.05,]
 
 # clean up environment and remove no longer needed objects
@@ -472,7 +480,7 @@ plot(selStrain1Model.BC4,type = "all",
 
 ####Figure 4 method validation 
 20 shared _F. virguliforme_ isolates between two assay to compare the correlation
-```{r Figure 3 compare two methods, echo=FALSE, fig.width=6}
+```{r Figure 4 compare two methods, echo=FALSE, fig.width=6}
 
 # correct strain name
 EC50SumConidiaGeoYear$strainName[EC50SumConidiaGeoYear$strainName == "Mont-1"] <- "Mont1"
@@ -731,15 +739,102 @@ kable(LL4vsBC4Table[,-3])
 ## Supplementals
 
 ```{r Tables S1 S2 S3, echo=FALSE}
+######## 2016-05-28 ###################
+# revised Table S1
+# mycelial assay
+fullPlateData$Strain <- do.call(str_replace_all, 
+                                list(fullPlateData$Strain, "_", "-"))
+# take all 50ppm isolates
+subPlate50Ppm <- fullPlateData[fullPlateData$Conc == 50,]
 
+# summarize the relative growth rate
+plateRelInhPerc <- subPlate50Ppm %>% group_by(Strain) %>%
+  summarise(N = length(relGrowthRate),
+            relInhibition = mean(relGrowthRate),
+            relSE = sd(relGrowthRate) / sqrt(N))
+
+# merge EC50 plate and relative inhibition together
+newECTablePlate1 <- merge(EC50PlateTable, plateRelInhPerc, by="Strain")
+
+# isolates not in the final table
+isolateNotInFinalTable <- 
+  unique(fullPlateData$Strain)[!unique(fullPlateData$Strain) 
+                               %in% EC50PlateTable$Strain]
+# data frame isolates not in the final table 
+isolateNotinFinalDF <- fullPlateData[fullPlateData$Strain %in% 
+                                       isolateNotInFinalTable,]
+
+# summarize for isolates not in the final table 
+plateRelInhPerc_1 <-
+  isolateNotinFinalDF[isolateNotinFinalDF$Conc == 50,] %>%
+  group_by(Strain) %>%
+  summarise(N = length(relGrowthRate),
+            relInhibition = mean(relGrowthRate),
+            relSE = sd(relGrowthRate) / sqrt(N))
+
+# Measurment error at INMO-C4, with relative growth inhibition at 200% at 50 ppm
+plateRelInhPerc_1 <- plateRelInhPerc_1[plateRelInhPerc_1$Strain != "INMO-C4",]
+
+# add geo metadata for the summarize for isolates not in the final table
+plateRelInhPerc_1_geo <- merge(y=plateRelInhPerc_1, x=strainInfoAll, 
+                               by.y = "Strain", by.x = "isolate")
+
+naDF <- data.frame(EC50=12*NA, StdErr=12*NA,Lower=12*NA, Upper=12*NA)
+
+# cbind two df
+plateRelInhPerc_2 <- cbind(plateRelInhPerc_1_geo[,1:4],
+                           naDF,plateRelInhPerc_1_geo[,5:7])
+
+# rbind to make final table 
+names(plateRelInhPerc_2) <- names(newECTablePlate1)
+newECTablePlate <- rbind(newECTablePlate1, plateRelInhPerc_2)
 
 # EC50PlateTable$Strain[duplicated(EC50PlateTable$Strain)]
 # EC50ConidialTable$Strain[duplicated(EC50ConidialTable$Strain)]
 
-kable(EC50PlateTable, 
+kable(newECTablePlate, 
       caption = "TableS1 EC50 estimation using poison plate mycelial \
-      growth inhibition assay")
-kable(EC50ConidialTable, 
+      growth inhibition assay") 
+
+############### Conidia Table S2 ######################
+
+# extract the 20 ppm data
+subConidia20Ppm <- coniNoNaData[coniNoNaData$Conc == 20,]
+
+coniNoNaData$Isolate <- do.call(str_replace_all, 
+                                list(coniNoNaData$Isolate, "_", "-"))
+#allConidiaIsolateNames <- unique(coniNoNaData$Isolate)
+#coniNoNaData[coniNoNaData$Isolate == "13Fv190",]
+# summarize the 20ppm mean and number
+conidiaRelInhPerc <- subConidia20Ppm %>% group_by(Isolate) %>%
+  summarise(N = length(relGerminate),
+            relInhibition = mean(relGerminate),
+            relSE = sd(relGerminate) / sqrt(N))
+
+newECTableConidia_1 <- merge(EC50ConidialTable, conidiaRelInhPerc,
+                             by.x="Strain", by.y="Isolate")
+
+# obtain isolates that do not have 20 ppm in the settings
+conidiaIsolateNo20ppm <- coniNoNaData[!(coniNoNaData$Isolate %in% 
+                                          conidiaRelInhPerc$Isolate),]
+isolateConidiaNo20ppmNames <- unique(conidiaIsolateNo20ppm$Isolate)
+#isolateTableNames1 <- unique(newECTableConidia_1$Strain)
+#allConidiaIsolateNames[!(allConidiaIsolateNames %in% c(isolateTableNames1,isolateConidiaNo20ppmNames))]
+
+# conidiaRelInhPerc[conidiaRelInhPerc$Isolate %in% "13Fv190",]
+
+newECTableConidia_2 <- EC50ConidialTable[EC50ConidialTable$Strain %in% isolateConidiaNo20ppmNames,]
+
+naDF_1 <- data.frame(N=4*NA, relInhibition=4*NA,relSE=4*NA)
+newECTableConidia_2_1 <- cbind(newECTableConidia_2, naDF_1)
+
+newECTableConidia <- rbind(newECTableConidia_1,newECTableConidia_2_1)
+
+# conidiaRelInhPerc[conidiaRelInhPerc$Isolate %in% "13Fv190",]
+
+# add 13 Fv19 to final list
+
+kable(newECTableConidia, 
       caption = "TableS2 EC50 estimation using conidial germination \
       growth inhibition assay")
 
@@ -805,7 +900,12 @@ ggplot(dupPlateDataSort, aes(y = EC50, x = set2Strain)) +
   geom_errorbar(aes(ymax = Upper, ymin=Lower), 
                position = position_dodge(width = 0.9), width=0.25) +
   labs(x = "Strains") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 5)) +
+  scale_fill_manual(values=c("#f7756d","#08ba38"), 
+                       name="Reproducibility",
+                       breaks=c("TRUE", "FALSE"),
+                       labels=c("Yes (n=21)", "No (n=1)"))
+
 
 # conidia reproduce
 dupConidiaStrains <- EC50SumFilterConidia[duplicated(EC50SumFilterConidia$Strain),]$Strain
@@ -826,15 +926,18 @@ for (i in seq(1,101,2)){
     dupConidia2DataSort$reproduce[i:(i+1)] <- FALSE
   }
 }
-# table(dupConidia2DataSort$reproduce)/2
+ table(dupConidia2DataSort$reproduce)/2
 
 ggplot(dupConidia2DataSort, aes(y = EC50, x = set2Strain)) + 
   geom_bar(stat="identity", aes(fill = reproduce) ) + 
   geom_errorbar(aes(ymax = Upper, ymin=Lower), 
                position = position_dodge(width = 0.9), width=0.25) +
   labs(x = "strains") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 4.5)) 
-
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 4.5)) +
+    scale_fill_manual(values=c("#f7756d","#08ba38"), 
+                       name="Reproducibility",
+                       breaks=c("TRUE", "FALSE"),
+                       labels=c("Yes (n=40)", "No (n=11)"))
 
 ```
 
