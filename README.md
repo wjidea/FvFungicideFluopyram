@@ -1,3 +1,6 @@
+[![DOI](https://zenodo.org/badge/22412/wjidea/FvFungicideFluopyram.svg)](https://zenodo.org/badge/latestdoi/22412/wjidea/FvFungicideFluopyram)
+
+
 # FvFungicideFluopyram
 Fungicide sensitivity test for _F. virguliforme_
 
