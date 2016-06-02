@@ -2,11 +2,10 @@
 Fungicide sensitivity test for _F. virguliforme_
 
 How to:
-1: open 2015_fungicide_manuscript.Rmd document in R studio
-2: render it with R studio
-3: sessionInfo()
+1: open 2015_fungicide_manuscript.Rmd document in R studio  
+2: render it with R studio  
+3: sessionInfo()  
 
-> sessionInfo()
 R version 3.3.0 (2016-05-03)
 Platform: x86_64-apple-darwin13.4.0 (64-bit)
 Running under: OS X 10.11.5 (El Capitan)
