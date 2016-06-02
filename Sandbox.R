@@ -339,3 +339,19 @@ conidiaRelInhPerc_2 <- cbind(conidiaRelInhPerc_1_geo[,1:4],
 names(conidiaRelInhPerc_2) <- names(newECTableConidia1)
 newECTableConidia <- rbind(newECTableConidia1, conidiaRelInhPerc_2)
 
+
+# EC50PlateSum vs newECTablePlate
+EC50PlateSum[!EC50PlateSum$Strain %in% newECTablePlate$Strain,]
+dim(newECTablePlate[!newECTablePlate$Strain %in% EC50PlateSum$Strain,])
+EC50PlateSum[EC50PlateSum$Strain == "MIVB-B4",]
+EC50PlateSum[EC50PlateSum$Strain == "MIBer-D1",]
+
+tempData <- fullPlateDataExclude50[fullPlateDataExclude50$Strain == "MIBer_D1",]
+
+testData.m1 <- drm(growthRate ~ Conc, 
+                  format(setStrain, trim=TRUE),
+                  fct=LL.4(names=c("slope",
+                                   "Lower Limit",
+                                   "Upper Limit","EC50")),
+                  data=tempData)
+summary(testData.m1)

@@ -187,7 +187,7 @@ Rodney-2,CA_CAgeneral_NorAm,CAN,Canada,Ontario,,N/A,NorthAmerica,,2014,F. virgul
 JR-226,Illinois_ILGeneral_NorAm,USA,UnitedStates,Illinois,,N/A,NorthAmerica,,,F. virguliforme,,,,,,,,,,,209,224,193,231,205,212,210,284,268,163,204,228
 JR-228,Illinois_ILGeneral_NorAm,USA,UnitedStates,Illinois,,N/A,NorthAmerica,,,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,192,278,232,187,204,279
 KOD-74,Illinois_ILGeneral_NorAm,USA,UnitedStates,Illinois,,N/A,NorthAmerica,,,F. virguliforme,,,,,,,,,,,209,226,193,231,205,212,210,290,268,163,204,228
-Mont1,Illinois_ILGeneral_NorAm,USA,UnitedStates,Illinois,,N/A,NorthAmerica,,,F. virguliforme,,,,,,F. virguliforme,,,,,209,226,193,231,205,185,234,278,232,163,204,228
+Mont1,Illinois_ILGeneral_NorAm,USA,UnitedStates,Illinois,Piatt,N/A,NorthAmerica,,1991,F. virguliforme,,,,,,F. virguliforme,,,,,209,226,193,231,205,185,234,278,232,163,204,228
 22823,Indiana_INGeneral_NorAm,USA,UnitedStates,Indiana,,N/A,NorthAmerica,,,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,0,218,196,187,216,243
 37592,Indiana_INGeneral_NorAm,USA,UnitedStates,Indiana,,N/A,NorthAmerica,,,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
 KOD-63,Indiana_INGeneral_NorAm,USA,UnitedStates,Indiana,,N/A,NorthAmerica,,,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,206,232,187,204,243
@@ -325,13 +325,13 @@ Mo4c,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,Monroe,,NorthAmerica,,20
 Mo4c-2,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,Monroe,,NorthAmerica,,2009,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
 Mo5a,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,Monroe,,NorthAmerica,,2009,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,210,290,226,190,216,243
 SA-11-2b,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,Saginaw,,NorthAmerica,,2011,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-ST-11-1,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,StClair,,NorthAmerica,,2011,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,272,232,187,204,246
-STJ-7P2ss,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,StJoseph,,NorthAmerica,,2009,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,290,232,187,216,243
-STJ1-7Ps,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,StJoseph,,NorthAmerica,,2009,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,186,272,232,187,216,243
-STJ3a,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,StJoseph,,NorthAmerica,,2009,F. virguliforme,,,,,,,,,,,191,212,166,219,217,173,186,272,232,187,204,279
-STJ3b,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,StJoseph,,NorthAmerica,,2009,F. virguliforme,,,,,,,,,,,191,212,166,219,217,173,234,272,232,187,204,279
-VB2a,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,VanBuren,,NorthAmerica,,2009,F. virguliforme,,,,,,,,,,,224,206,193,219,203,185,234,278,232,229,246,198
-VB1,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,VanBuren,,NorthAmerica,,2009,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,180,224,202,187,204,246
+ST-11-1,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,St. Clair,,NorthAmerica,,2011,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,272,232,187,204,246
+STJ-7P2ss,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,St. Joseph,,NorthAmerica,,2009,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,290,232,187,216,243
+STJ1-7Ps,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,St. Joseph,,NorthAmerica,,2009,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,186,272,232,187,216,243
+STJ3a,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,St. Joseph,,NorthAmerica,,2009,F. virguliforme,,,,,,,,,,,191,212,166,219,217,173,186,272,232,187,204,279
+STJ3b,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,St. Joseph,,NorthAmerica,,2009,F. virguliforme,,,,,,,,,,,191,212,166,219,217,173,234,272,232,187,204,279
+VB2a,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,Van Buren,,NorthAmerica,,2009,F. virguliforme,,,,,,,,,,,224,206,193,219,203,185,234,278,232,229,246,198
+VB1,Michigan_MIGeneral_NorAm,USA,UnitedStates,Michigan,Van Buren,,NorthAmerica,,2009,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,180,224,202,187,204,246
 MIBer-A1,Michigan_MIBer_NorAm,USA,UnitedStates,Michigan,Berrien,MIBer,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,203,209,234,272,232,187,216,246
 MIBer-A2,Michigan_MIBer_NorAm,USA,UnitedStates,Michigan,Berrien,MIBer,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,205,212,234,284,232,187,204,243
 MIBer-A3,Michigan_MIBer_NorAm,USA,UnitedStates,Michigan,Berrien,MIBer,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,205,212,234,278,232,187,204,243
@@ -394,40 +394,40 @@ MISA-D1,Michigan_MISA_NorAm,USA,UnitedStates,Michigan,Saginaw,MISA,NorthAmerica,
 MISA-D7,Michigan_MISA_NorAm,USA,UnitedStates,Michigan,Saginaw,MISA,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
 MISA-G1,Michigan_MISA_NorAm,USA,UnitedStates,Michigan,Saginaw,MISA,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,284,232,187,222,246
 MISA-G5-a,Michigan_MISA_NorAm,USA,UnitedStates,Michigan,Saginaw,MISA,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,278,232,166,204,243
-MISTJ-A1,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MISTJ-A2,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,284,232,187,204,243
-MISTJ-A3,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MISTJ-A4,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,252
-MISTJ-A5,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
-MISTJ-A6,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
-MISTJ-B1,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,188,212,166,219,203,209,234,254,232,187,204,243
-MISTJ-B2,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,254,232,187,204,234
-MISTJ-B3,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,254,232,187,204,246
-MISTJ-B4,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,169,204,243
-MISTJ-C2,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,188,212,166,219,203,209,234,254,232,187,204,243
-MISTJ-C3,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,224,206,193,219,203,185,174,224,202,226,246,198
-MISTJ-C5,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
-MISTJ-C6,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,186,278,232,187,204,276
-MISTJ-C7,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,188,212,166,219,203,209,234,254,196,187,204,243
-MISTJ-D5,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
-MISTJ-D6,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,122,170,184,183,177,0,0,110,202,145,156,159
-MISTJ-D7,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,278,208,190,204,207
-MISTJ-E2,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MISTJ-E4,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,278,232,187,204,243
-MISTJ-E4a,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,0,212,166,219,205,212,234,278,232,187,204,246
-MISTJ-E4b,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,0,234,278,232,187,204,246
-MISTJ-E5,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,204,246
-MISTJ-E6,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,254,232,187,204,243
-MISTJ-E7,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MISTJ-F1,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,260,232,187,204,246
-MISTJ-F2,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,284,208,190,204,240
-MISTJ-F3,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MISTJ-F5,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,254,232,187,210,246
-MISTJ-F6,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,170,206,193,219,205,209,240,218,232,238,210,228
-MISTJ-G3,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MISTJ-G4,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,210,166,219,203,209,186,278,232,187,204,273
-MISTJ-G5,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,0,212,166,219,203,209,186,278,232,187,204,273
-MISTJ-G7,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,StJoseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,0,212,166,219,203,209,234,272,232,187,216,246
+MISTJ-A1,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MISTJ-A2,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,284,232,187,204,243
+MISTJ-A3,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MISTJ-A4,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,252
+MISTJ-A5,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
+MISTJ-A6,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
+MISTJ-B1,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,188,212,166,219,203,209,234,254,232,187,204,243
+MISTJ-B2,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,254,232,187,204,234
+MISTJ-B3,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,254,232,187,204,246
+MISTJ-B4,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,169,204,243
+MISTJ-C2,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,188,212,166,219,203,209,234,254,232,187,204,243
+MISTJ-C3,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,224,206,193,219,203,185,174,224,202,226,246,198
+MISTJ-C5,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
+MISTJ-C6,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,186,278,232,187,204,276
+MISTJ-C7,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,188,212,166,219,203,209,234,254,196,187,204,243
+MISTJ-D5,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
+MISTJ-D6,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,122,170,184,183,177,0,0,110,202,145,156,159
+MISTJ-D7,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,278,208,190,204,207
+MISTJ-E2,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MISTJ-E4,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,278,232,187,204,243
+MISTJ-E4a,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,0,212,166,219,205,212,234,278,232,187,204,246
+MISTJ-E4b,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,0,234,278,232,187,204,246
+MISTJ-E5,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,204,246
+MISTJ-E6,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,254,232,187,204,243
+MISTJ-E7,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MISTJ-F1,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,260,232,187,204,246
+MISTJ-F2,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,284,208,190,204,240
+MISTJ-F3,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MISTJ-F5,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,254,232,187,210,246
+MISTJ-F6,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,170,206,193,219,205,209,240,218,232,238,210,228
+MISTJ-G3,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MISTJ-G4,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,210,166,219,203,209,186,278,232,187,204,273
+MISTJ-G5,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,0,212,166,219,203,209,186,278,232,187,204,273
+MISTJ-G7,Michigan_MISTJ_NorAm,USA,UnitedStates,Michigan,St. Joseph,MISTJ,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,0,212,166,219,203,209,234,272,232,187,216,246
 MITU-A1,Michigan_MITU_NorAm,USA,UnitedStates,Michigan,Tuscola,MITU,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,284,208,187,204,216
 MITU-A2,Michigan_MITU_NorAm,USA,UnitedStates,Michigan,Tuscola,MITU,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,246,272,232,190,204,249
 MITU-A3,Michigan_MITU_NorAm,USA,UnitedStates,Michigan,Tuscola,MITU,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,166,166,219,205,212,234,278,232,187,204,246
@@ -481,61 +481,61 @@ MITU-G4,Michigan_MITU_NorAm,USA,UnitedStates,Michigan,Tuscola,MITU,NorthAmerica,
 MITU-G5,Michigan_MITU_NorAm,USA,UnitedStates,Michigan,Tuscola,MITU,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,278,232,166,204,243
 MITU-G6,Michigan_MITU_NorAm,USA,UnitedStates,Michigan,Tuscola,MITU,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,210,166,219,205,215,234,278,232,187,204,246
 MITU-G7,Michigan_MITU_NorAm,USA,UnitedStates,Michigan,Tuscola,MITU,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,215,234,278,232,187,204,246
-DBP27R11,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-DBP27R13,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-DBP28R13,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,284,232,187,204,246
-DBP29R9,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-DBP30R3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,143,214,166,219,205,212,234,278,232,187,204,249
-DBP30R4,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,143,210,166,219,203,212,234,284,232,187,204,246
-DBP30R5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,191,210,166,219,203,209,234,260,232,187,204,246
-DBP30R6,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,243
-DBP30R7,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,0,212,166,219,205,215,234,278,232,187,204,246
-MIVB-A1,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MIVB-A2,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
-MIVB-A3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,186,166,219,205,212,234,278,232,187,204,246
-MIVB-A4,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,210,166,219,203,209,234,278,208,190,204,207
-MIVB-A5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,140,208,166,219,205,212,234,278,232,187,204,246
-MIVB-A6,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,212,224,190,231,205,212,210,290,244,163,204,228
-MIVB-A7,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MIVB-B1,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MIVB-B2,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,243
-MIVB-B3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,186,166,219,205,212,234,278,232,187,204,246
-MIVB-B4,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,222,243
-MIVB-B5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,203,210,193,219,203,218,234,278,202,235,210,231
-MIVB-B7,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,249
-MIVB-C1,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
-MIVB-C2,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MIVB-C3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,243
-MIVB-C4,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,243
-MIVB-C5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,203,210,193,219,203,218,234,278,202,235,210,231
-MIVB-C6,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,252
-MIVB-C7,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,161,234,278,232,187,204,243
-MIVB-D1,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,225,205,212,234,278,232,187,204,216
-MIVB-D2,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MIVB-D3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,243
-MIVB-D4,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MIVB-D5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,205,216,243
-MIVB-D6,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,194,212,166,219,203,209,234,272,232,190,204,243
-MIVB-D7,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MIVB-E1,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,216
-MIVB-E2,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,243
-MIVB-E3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MIVB-E4,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,284,232,187,204,246
-MIVB-E5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MIVB-E6,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,204,261
-MIVB-F1,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,240,272,232,187,204,246
-MIVB-F2,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,210,243
-MIVB-F3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MIVB-F4,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MIVB-F5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,284,232,187,204,246
-MIVB-F6,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MIVB-F7,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,186,278,232,190,204,276
-MIVB-G1,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
-MIVB-G2,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,243
-MIVB-G3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MIVB-G5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
-MIVB-G6,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,222,243
-MIVB-G7,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,VanBuren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,224,206,193,219,203,185,174,224,202,229,210,198
+DBP27R11,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+DBP27R13,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+DBP28R13,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,284,232,187,204,246
+DBP29R9,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+DBP30R3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,143,214,166,219,205,212,234,278,232,187,204,249
+DBP30R4,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,143,210,166,219,203,212,234,284,232,187,204,246
+DBP30R5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,191,210,166,219,203,209,234,260,232,187,204,246
+DBP30R6,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,243
+DBP30R7,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2013,F. virguliforme,,,,,,,,,,,0,212,166,219,205,215,234,278,232,187,204,246
+MIVB-A1,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MIVB-A2,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
+MIVB-A3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,186,166,219,205,212,234,278,232,187,204,246
+MIVB-A4,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,210,166,219,203,209,234,278,208,190,204,207
+MIVB-A5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,140,208,166,219,205,212,234,278,232,187,204,246
+MIVB-A6,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,212,224,190,231,205,212,210,290,244,163,204,228
+MIVB-A7,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MIVB-B1,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MIVB-B2,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,243
+MIVB-B3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,186,166,219,205,212,234,278,232,187,204,246
+MIVB-B4,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,222,243
+MIVB-B5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,203,210,193,219,203,218,234,278,202,235,210,231
+MIVB-B7,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,249
+MIVB-C1,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
+MIVB-C2,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MIVB-C3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,243
+MIVB-C4,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,243
+MIVB-C5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,203,210,193,219,203,218,234,278,202,235,210,231
+MIVB-C6,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,252
+MIVB-C7,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,161,234,278,232,187,204,243
+MIVB-D1,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,225,205,212,234,278,232,187,204,216
+MIVB-D2,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MIVB-D3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,243
+MIVB-D4,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MIVB-D5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,205,216,243
+MIVB-D6,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,194,212,166,219,203,209,234,272,232,190,204,243
+MIVB-D7,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MIVB-E1,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,216
+MIVB-E2,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,243
+MIVB-E3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MIVB-E4,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,284,232,187,204,246
+MIVB-E5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MIVB-E6,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,204,261
+MIVB-F1,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,240,272,232,187,204,246
+MIVB-F2,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,210,243
+MIVB-F3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MIVB-F4,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MIVB-F5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,284,232,187,204,246
+MIVB-F6,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MIVB-F7,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,186,278,232,190,204,276
+MIVB-G1,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,216,243
+MIVB-G2,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,243
+MIVB-G3,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MIVB-G5,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,143,212,166,219,205,212,234,278,232,187,204,246
+MIVB-G6,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,191,212,166,219,203,209,234,272,232,187,222,243
+MIVB-G7,Michigan_MIVB_NorAm,USA,UnitedStates,Michigan,Van Buren,MIVB,NorthAmerica,,2012,F. virguliforme,,,,,,,,,,,224,206,193,219,203,185,174,224,202,229,210,198
 32392,Wisconsin_WIGeneral_NorAm,USA,UnitedStates,Wisconsin,N/A,N/A,NorthAmerica,,,F. virguliforme,,,,,,,,,,,143,212,166,219,205,215,234,278,232,187,204,243
 37588,Wisconsin_WIGeneral_NorAm,USA,UnitedStates,Wisconsin,N/A,N/A,NorthAmerica,,,F. virguliforme,,,,,,,,,,,143,212,166,219,205,215,234,278,232,187,204,243
 Stoldt,,USA,UnitedStates,Michigan,Lapeer,ImlayCity,NorthAmerica,,2015,F. virguliforme,,,,,,,,,,,,,,,,,,,,,,

@@ -626,7 +626,7 @@ kable(sumConidiaTable,
 
 
 #### Table 3
-```{r Table 3 data prep,cache=TRUE,echo=FALSE, warning=FALSE, eval=TRUE}
+```{r Table 3 data prep,results = "hide", warning = FALSE, echo = FALSE, cache=TRUE}
 
 # not renderred caused by possible error in the model selection step.
 # therefore a csv file was written in the disk and kable will be generated
@@ -729,9 +729,46 @@ summary(LL4vsBC4All$diff)
 ```{r Table3 hormetic effect Table, eval = TRUE, echo=FALSE}
 # "LL4vsBC4.csv" file was generated from the block above
 
-LL4vsBC4Table <- read.csv("./Data/LL4vsBC4.csv", row.names = 1)
-kable(LL4vsBC4Table[,-3])
 
+LL4vsBC4Table <- read.csv("./Data/LL4vsBC4.csv", row.names = 1)
+fullPlateData$Strain <- do.call(str_replace_all, 
+                                list(fullPlateData$Strain, "_", "-"))
+LL4vsBC4Table$Strain <- do.call(str_replace_all, 
+                                list(LL4vsBC4Table$Strain, "_", "-"))
+
+subPlate5Ppm <- fullPlateData[fullPlateData$Conc == 5,]
+plateRelInhPerc5Ppm <- subPlate5Ppm %>% group_by(Strain) %>%
+  summarise(N = length(relGrowthRate),
+            relInhibition5 = mean(relGrowthRate),
+            relSE5 = sd(relGrowthRate) / sqrt(N))
+
+subPlate10Ppm <- fullPlateData[fullPlateData$Conc == 10,]
+plateRelInhPerc10Ppm <- subPlate10Ppm %>% group_by(Strain) %>%
+  summarise(N = length(relGrowthRate),
+            relInhibition10 = mean(relGrowthRate),
+            relSE10 = sd(relGrowthRate) / sqrt(N))
+
+subPlate50Ppm <- fullPlateData[fullPlateData$Conc == 50,]
+plateRelInhPerc <- subPlate50Ppm %>% group_by(Strain) %>%
+  summarise(N = length(relGrowthRate),
+            relInhibition50 = mean(relGrowthRate),
+            relSE50 = sd(relGrowthRate) / sqrt(N))
+
+subPlate100Ppm <- fullPlateData[fullPlateData$Conc == 100,]
+plateRelInhPerc100ppm <- subPlate100Ppm %>% group_by(Strain) %>%
+  summarise(N = length(relGrowthRate),
+            relInhibition100 = mean(relGrowthRate),
+            relSE100 = sd(relGrowthRate) / sqrt(N))
+
+LL4vsBC4Table5ppm <- merge(LL4vsBC4Table, plateRelInhPerc5Ppm, by="Strain",
+                           all.x=TRUE)
+LL4vsBC4Table10ppm <- merge(LL4vsBC4Table5ppm, plateRelInhPerc10Ppm, by="Strain",
+                            all.x=TRUE)
+LL4vsBC4Table50ppm <- merge(LL4vsBC4Table10ppm, plateRelInhPerc, by="Strain",
+                          all.x=TRUE)
+newLL4vsBC4Table <- merge(LL4vsBC4Table50ppm, plateRelInhPerc100ppm, by="Strain",
+                          all.x=TRUE)
+kable(newLL4vsBC4Table)
 
 ```
 
@@ -742,103 +779,80 @@ kable(LL4vsBC4Table[,-3])
 ######## 2016-05-28 ###################
 # revised Table S1
 # mycelial assay
-fullPlateData$Strain <- do.call(str_replace_all, 
-                                list(fullPlateData$Strain, "_", "-"))
+# fullPlateData$Strain <- do.call(str_replace_all, 
+#                                 list(fullPlateData$Strain, "_", "-"))
 # take all 50ppm isolates
-subPlate50Ppm <- fullPlateData[fullPlateData$Conc == 50,]
+# subPlate50Ppm <- fullPlateData[fullPlateData$Conc == 50,]
+# subPlate10Ppm <- fullPlateData[fullPlateData$Conc == 10,]
+# subPlate5Ppm <- fullPlateData[fullPlateData$Conc == 5,]
+
 
 # summarize the relative growth rate
-plateRelInhPerc <- subPlate50Ppm %>% group_by(Strain) %>%
-  summarise(N = length(relGrowthRate),
-            relInhibition = mean(relGrowthRate),
-            relSE = sd(relGrowthRate) / sqrt(N))
+# plateRelInhPerc <- subPlate50Ppm %>% group_by(Strain) %>%
+#   summarise(N = length(relGrowthRate),
+#             relInhibition50 = mean(relGrowthRate),
+#             relSE50 = sd(relGrowthRate) / sqrt(N))
+
+# plateRelInhPerc10Ppm <- subPlate10Ppm %>% group_by(Strain) %>%
+#   summarise(N = length(relGrowthRate),
+#             relInhibition10 = mean(relGrowthRate),
+#             relSE10 = sd(relGrowthRate) / sqrt(N))
+
+# plateRelInhPerc5Ppm <- subPlate5Ppm %>% group_by(Strain) %>%
+#   summarise(N = length(relGrowthRate),
+#             relInhibition5 = mean(relGrowthRate),
+#             relSE5 = sd(relGrowthRate) / sqrt(N))
 
 # merge EC50 plate and relative inhibition together
-newECTablePlate1 <- merge(EC50PlateTable, plateRelInhPerc, by="Strain")
+ECTablePlate10ppm <- merge(EC50PlateTable, plateRelInhPerc10Ppm, by="Strain",
+                          all.y=TRUE)
+ECTableDF50ppm <- merge(ECTablePlate10ppm,plateRelInhPerc, by="Strain", all=TRUE)
+ECTableDF5ppm <- merge(ECTableDF50ppm, plateRelInhPerc5Ppm, by="Strain", all=TRUE)
+# ECTableDF5ppm[ECTableDF5ppm$Strain == "MIVB-B4",]
 
-# isolates not in the final table
-isolateNotInFinalTable <- 
-  unique(fullPlateData$Strain)[!unique(fullPlateData$Strain) 
-                               %in% EC50PlateTable$Strain]
-# data frame isolates not in the final table 
-isolateNotinFinalDF <- fullPlateData[fullPlateData$Strain %in% 
-                                       isolateNotInFinalTable,]
 
-# summarize for isolates not in the final table 
-plateRelInhPerc_1 <-
-  isolateNotinFinalDF[isolateNotinFinalDF$Conc == 50,] %>%
-  group_by(Strain) %>%
-  summarise(N = length(relGrowthRate),
-            relInhibition = mean(relGrowthRate),
-            relSE = sd(relGrowthRate) / sqrt(N))
-
-# Measurment error at INMO-C4, with relative growth inhibition at 200% at 50 ppm
-plateRelInhPerc_1 <- plateRelInhPerc_1[plateRelInhPerc_1$Strain != "INMO-C4",]
-
-# add geo metadata for the summarize for isolates not in the final table
-plateRelInhPerc_1_geo <- merge(y=plateRelInhPerc_1, x=strainInfoAll, 
-                               by.y = "Strain", by.x = "isolate")
-
-naDF <- data.frame(EC50=12*NA, StdErr=12*NA,Lower=12*NA, Upper=12*NA)
-
-# cbind two df
-plateRelInhPerc_2 <- cbind(plateRelInhPerc_1_geo[,1:4],
-                           naDF,plateRelInhPerc_1_geo[,5:7])
-
-# rbind to make final table 
-names(plateRelInhPerc_2) <- names(newECTablePlate1)
-newECTablePlate <- rbind(newECTablePlate1, plateRelInhPerc_2)
-
-# EC50PlateTable$Strain[duplicated(EC50PlateTable$Strain)]
-# EC50ConidialTable$Strain[duplicated(EC50ConidialTable$Strain)]
-
-kable(newECTablePlate, 
+kable(ECTableDF5ppm, 
       caption = "TableS1 EC50 estimation using poison plate mycelial \
       growth inhibition assay") 
 
 ############### Conidia Table S2 ######################
 
-# extract the 20 ppm data
-subConidia20Ppm <- coniNoNaData[coniNoNaData$Conc == 20,]
-
 coniNoNaData$Isolate <- do.call(str_replace_all, 
                                 list(coniNoNaData$Isolate, "_", "-"))
+
+# extract the 20 ppm data
+subConidia20Ppm <- coniNoNaData[coniNoNaData$Conc == 20,]
+subConidia10Ppm <- coniNoNaData[coniNoNaData$Conc == 10,]
+subConidia5Ppm <- coniNoNaData[coniNoNaData$Conc == 5,]
+
 #allConidiaIsolateNames <- unique(coniNoNaData$Isolate)
 #coniNoNaData[coniNoNaData$Isolate == "13Fv190",]
 # summarize the 20ppm mean and number
 conidiaRelInhPerc <- subConidia20Ppm %>% group_by(Isolate) %>%
   summarise(N = length(relGerminate),
-            relInhibition = mean(relGerminate),
-            relSE = sd(relGerminate) / sqrt(N))
+            relInhibition20 = mean(relGerminate),
+            relSE20 = sd(relGerminate) / sqrt(N))
 
-newECTableConidia_1 <- merge(EC50ConidialTable, conidiaRelInhPerc,
-                             by.x="Strain", by.y="Isolate")
+conidiaRelInhPerc10ppm <- subConidia10Ppm %>% group_by(Isolate) %>%
+  summarise(N = length(relGerminate),
+            relInhibition10 = mean(relGerminate),
+            relSE10 = sd(relGerminate) / sqrt(N))
 
-# obtain isolates that do not have 20 ppm in the settings
-conidiaIsolateNo20ppm <- coniNoNaData[!(coniNoNaData$Isolate %in% 
-                                          conidiaRelInhPerc$Isolate),]
-isolateConidiaNo20ppmNames <- unique(conidiaIsolateNo20ppm$Isolate)
-#isolateTableNames1 <- unique(newECTableConidia_1$Strain)
-#allConidiaIsolateNames[!(allConidiaIsolateNames %in% c(isolateTableNames1,isolateConidiaNo20ppmNames))]
+conidiaRelInhPerc5ppm <- subConidia5Ppm %>% group_by(Isolate) %>%
+  summarise(N = length(relGerminate),
+            relInhibition5 = mean(relGerminate),
+            relSE5 = sd(relGerminate) / sqrt(N))
 
-# conidiaRelInhPerc[conidiaRelInhPerc$Isolate %in% "13Fv190",]
+newECTableConidia20ppm <- merge(EC50ConidialTable, conidiaRelInhPerc,
+                             by.x="Strain", by.y="Isolate", all=TRUE)
+newECTableConidia10ppm <- merge(newECTableConidia20ppm, conidiaRelInhPerc10ppm,
+                                by.x="Strain", by.y="Isolate", all=TRUE)
+newECTableConidia5ppm <- merge(newECTableConidia10ppm, conidiaRelInhPerc5ppm,
+                                by.x="Strain", by.y="Isolate", all=TRUE)
 
-newECTableConidia_2 <- EC50ConidialTable[EC50ConidialTable$Strain %in% isolateConidiaNo20ppmNames,]
-
-naDF_1 <- data.frame(N=4*NA, relInhibition=4*NA,relSE=4*NA)
-newECTableConidia_2_1 <- cbind(newECTableConidia_2, naDF_1)
-
-newECTableConidia <- rbind(newECTableConidia_1,newECTableConidia_2_1)
-
-# conidiaRelInhPerc[conidiaRelInhPerc$Isolate %in% "13Fv190",]
-
-# add 13 Fv19 to final list
-
-kable(newECTableConidia, 
+kable(newECTableConidia5ppm, 
       caption = "TableS2 EC50 estimation using conidial germination \
       growth inhibition assay")
-
-
 
 # the code I worte below was to generate a table with
 # the strains that dont have a absolute EC50. In other words,
@@ -943,6 +957,17 @@ ggplot(dupConidia2DataSort, aes(y = EC50, x = set2Strain)) +
 
 
 ```{r model selection, eval = FALSE, echo=FALSE}
+fullPlateDataExclude50$Strain <- do.call(str_replace_all, 
+                                list(fullPlateDataExclude50$Strain, "_", "-"))
+subHormeticData <- 
+  fullPlateDataExclude50[fullPlateDataExclude50$Strain %in% LL4vsBC4Table$Strain,]
+
+subData.hormetic <- drm(growthRate ~ Conc, 
+                  format(setStrain, trim=TRUE),
+                  fct=LL.4(),
+                  data=subHormeticData)
+mselect(subData.hormetic, list(LL.3(), W1.4(), W2.4(), CRS.4c(), BC.4()))
+
 subData.2 <- subset(fullPlateDataExclude50, 
                   subset = fullPlateDataExclude50$setStrain %in% c("2@AL1b","7@Mont1", "13@14Fv1", "13@14Fv21"))
 subData.3 <- subset(fullPlateDataExclude50, 
