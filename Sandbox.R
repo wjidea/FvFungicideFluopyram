@@ -346,7 +346,7 @@ dim(newECTablePlate[!newECTablePlate$Strain %in% EC50PlateSum$Strain,])
 EC50PlateSum[EC50PlateSum$Strain == "MIVB-B4",]
 EC50PlateSum[EC50PlateSum$Strain == "MIBer-D1",]
 
-tempData <- fullPlateDataExclude50[fullPlateDataExclude50$Strain == "MIBer_D1",]
+tempData <- fullPlateDataExclude50[fullPlateDataExclude50$Strain == "MIVB_B4",]
 
 testData.m1 <- drm(growthRate ~ Conc, 
                   format(setStrain, trim=TRUE),

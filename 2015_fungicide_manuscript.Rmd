@@ -358,13 +358,15 @@ histPlotPlateA <- ggplot(EC50PlateSum, aes(x=EC50)) +
              linetype="dashed", size=1) + theme_grey() + geom_rug() + 
   scale_x_continuous(breaks=0:12, limits = c(0,10)) + 
   scale_y_continuous(breaks=c(0,5,10,15,20,25,30)) + 
-  labs(y="Frequency", x=expression('Fluopyram EC'[50]*' (mg/L)')) +
+  labs(y="Frequency", x=expression('EC'[50]*' (mg/L)')) +
   theme_classic() +
   theme(axis.text   = element_text(size=14), 
         axis.title  = element_text(size=16),
         axis.text.x = element_text(colour="black"), 
-        axis.text.y = element_text(colour="black")) +
-  geom_text(x = 10, y =25, label="A", fontface = "bold", size = 10)
+        axis.text.y = element_text(colour="black"),
+        axis.line.x = element_line(color="black", size = 0.7),
+        axis.line.y = element_line(color="black", size = 0.7)) 
+  #geom_text(x = 10, y =25, label="A", fontface = "bold", size = 10)
   
 
 histPlotConidiaB <- ggplot(EC50ConidiaSum, aes(x=EC50)) + 
@@ -376,13 +378,15 @@ histPlotConidiaB <- ggplot(EC50ConidiaSum, aes(x=EC50)) +
              linetype="dashed", size=1) + theme_grey() + geom_rug() + 
   scale_x_continuous(breaks=0:12, limits = c(0,10)) + 
   scale_y_continuous(breaks=c(0,5,10,15,20,25,30)) + 
-  labs(y="Frequency", x=expression('Fluopyram EC'[50]*' (mg/L)')) +
+  labs(y="Frequency", x=expression('EC'[50]*' (mg/L)')) +
   theme_classic()+
   theme(axis.text   = element_text(size=14), 
         axis.title  = element_text(size=16),
         axis.text.x = element_text(colour="black"), 
-        axis.text.y = element_text(colour="black")) +
-  geom_text(x = 10, y =25, label="B", fontface = "bold", size = 10)
+        axis.text.y = element_text(colour="black"),
+        axis.line.x = element_line(color="black", size = 0.7),
+        axis.line.y = element_line(color="black", size = 0.7)) 
+  #geom_text(x = 10, y =25, label="B", fontface = "bold", size = 10)
 grid.arrange(histPlotPlateA, histPlotConidiaB, ncol=2)
 
 
@@ -412,7 +416,11 @@ plot(selStrain2Model1,type = "all",
      cex.axis = 1,
      main = "Mycelial growth inhibition assay",
      legendPos = c(95,0.14),
-     ylim = c(0,0.14))
+     ylim = c(0,0.14),
+     lwd=2.5,
+     legend=FLASE)
+selStrain2Model1$parNames[[3]][1:4]
+
 
 selStrain2 <- c("Mo1b@10", "Mont-1@10", "14Fv1@7", "14Fv21@7")
 selStrain2Data <- coniNoNaData[coniNoNaData$setStrain %in% selStrain2,,drop=TRUE]
